@@ -1,29 +1,35 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <ToolBar />
+    <BoardList :list="statusList" @get-status-list="getStatusList" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import ToolBar from './components/ToolBar.vue'
+import BoardList from './components/BoardList.vue'
+import { Status } from './types/Status'
+import api from './service/api'
 
 export default Vue.extend({
   name: 'App',
-  components: {
-    HelloWorld
+  components: { ToolBar, BoardList },
+  data() {
+    return {
+      statusList: [] as Status[]
+    }
+  },
+  methods: {
+    async getStatusList() {
+      this.statusList = await api.getStatus('/statusList')
+    }
+  },
+  mounted() {
+    this.getStatusList()
   }
 })
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+@import './assets/main.scss'
 </style>

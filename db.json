@@ -1,0 +1,36 @@
+{
+  "statusList": [
+    {
+      "id": "G1704448931116",
+      "name": "New Board 1",
+      "todoList": [
+        {
+          "id": "G170444893111989",
+          "title": "標題",
+          "content": "<p>內文</p>",
+          "deadline": "2023-01-10",
+          "tags": [
+            "tag 1",
+            "tag 2",
+            "客製化"
+          ]
+        },
+        {
+          "id": "A170444833311989",
+          "title": "標題1",
+          "content": "<p>內文1</p>",
+          "deadline": "2023-01-30",
+          "tags": [
+            "tag 1",
+            "tag 2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "K1704506418957",
+      "name": "New Board 2",
+      "todoList": []
+    }
+  ]
+}
