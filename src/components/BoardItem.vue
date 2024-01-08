@@ -16,6 +16,7 @@
         <CardItem v-for="todo in boardData.todoList" :key="todo.id" :todo-item="todo" :board-list="boardList"
           :board-data="boardData" @toggle-todo-modal="toggleTodoModal" @get-status-list="getStatusList" />
       </draggable>
+      <p v-if="boardData.todoList.length === 0" class="text-center mb-4">無符合項目</p>
       <div class="text-center">
         <button type="button" class="btn btn-light w-75" @click="openAddModal">新增待辦</button>
       </div>

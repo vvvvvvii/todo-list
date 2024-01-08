@@ -1,6 +1,7 @@
 <template>
-  <div id="app">
-    <ToolBar :board-list="statusList" @set-filter-status-list="setFilterStatusList" />
+  <div id="app" class="py-4" :data-bs-theme="themeColor">
+    <ToolBar :board-list="statusList" :theme-color="themeColor" @set-filter-status-list="setFilterStatusList"
+      @toggle-theme-color="toggleThemeColor" />
     <BoardList :board-list="filterStatusList" :today-timestamp="todayTimestamp" @get-status-list="getStatusList" />
     <OvertimeAlert :list="overtimeTodos" v-if="overtimeTodos.length > 0" />
   </div>
@@ -24,12 +25,14 @@ export default Vue.extend({
       todayTimestamp: 0,
       todoList: [] as TodoItem[],
       overtimeTodos: [] as TodoItem[],
-      filterStatusList: [] as Status[]
+      filterStatusList: [] as Status[],
+      themeColor: 'light'
     }
   },
   methods: {
     async getStatusList() {
       this.statusList = await api.getStatus('/statusList')
+      this.setFilterStatusList(this.statusList)
     },
     getTodayTimestamp() {
       const today = new Date()
@@ -64,6 +67,9 @@ export default Vue.extend({
     },
     setFilterStatusList(newList: Status[]) {
       this.filterStatusList = newList
+    },
+    toggleThemeColor(mode: 'light' | 'dark') {
+      this.themeColor = mode
     }
   },
   async mounted() {

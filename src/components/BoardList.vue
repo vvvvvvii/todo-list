@@ -5,6 +5,7 @@
         <BoardItem :board-data="statusBoard" :board-list="boardList" @toggle-todo-modal="toggleTodoModal"
           @get-status-list="getStatusList" />
       </div>
+
       <div class="col-4">
         <div class="text-center">
           <button type="button" class="btn btn-light w-75" @click="addStatus">新增狀態</button>
@@ -53,7 +54,7 @@ export default defineComponent({
         },
         deadline: 0,
         normalTags: [] as string[],
-        customTag: '',
+        customTag: null as (null | string),
         tags: [] as string[]
       } as TodoItem
     }

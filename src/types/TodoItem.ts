@@ -9,6 +9,6 @@ export interface TodoItem {
   deadline: number
   isOvertime: boolean
   normalTags: string[]
-  customTag: string
+  customTag: null | string
   tags: string[]
 }

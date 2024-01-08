@@ -32,7 +32,7 @@
           </div>
           <div class="mb-3">
             <label for="todoModalCustomTag" class="form-label">客製化 Tag</label>
-            <input type="text" class="form-control" v-model="modal.customTag" id="todoModalCustomTag">
+            <input type="text" class="form-control" v-model.trim="modal.customTag" id="todoModalCustomTag">
           </div>
           <div class="mb-3">
             <label class="form-label">到期時間*</label>
@@ -105,7 +105,7 @@ export default defineComponent({
         deadline: 0,
         isOvertime: false,
         normalTags: [] as string[],
-        customTag: '',
+        customTag: null as (null | string),
         tags: [] as string[]
       } as TodoItem
     }
@@ -130,7 +130,9 @@ export default defineComponent({
     },
     selectedTags(): string[] {
       const { normalTags, customTag } = this.modal
-      return [...normalTags, customTag]
+      const tags = [...normalTags]
+      if (customTag) tags.push(customTag)
+      return tags
     }
 
   },
