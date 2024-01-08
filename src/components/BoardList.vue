@@ -1,8 +1,9 @@
 <template>
   <div class="container">
     <div class="row flex-nowrap">
-      <div class="col-4" v-for="statusBoard in list" :key="statusBoard.id">
-        <BoardItem :board-data="statusBoard" @get-status-list="getStatusList" />
+      <div class="col-4" v-for="statusBoard in boardList" :key="statusBoard.id">
+        <BoardItem :board-data="statusBoard" :board-list="boardList" @toggle-todo-modal="toggleTodoModal"
+          @get-status-list="getStatusList" />
       </div>
       <div class="col-4">
         <div class="text-center">
@@ -10,22 +11,51 @@
         </div>
       </div>
     </div>
+    <!-- todo modal -->
+    <TodoModal :today-timestamp="todayTimestamp" :mode="todoMode" :default-data="todoModalData" :board-list="boardList"
+      @get-status-list="getStatusList" @toggle-todo-modal="toggleTodoModal" />
   </div>
 </template>
 
 <script lang="ts">
 import BoardItem from './BoardItem.vue'
+import TodoModal from './todoModal.vue'
 import { Status } from '../types/Status'
+import { TodoItem } from '@/types/TodoItem'
 import { defineComponent, PropType } from 'vue'
 import api from '../service/api'
+import { Modal } from 'bootstrap'
 
 export default defineComponent({
   name: 'BoardList',
-  components: { BoardItem },
+  components: { BoardItem, TodoModal },
   props: {
-    list: {
+    boardList: {
       required: true,
-      type: Array as PropType<Status[]>
+      type: [] as PropType<Status[]>
+    },
+    todayTimestamp: {
+      required: true,
+      type: Number
+    }
+  },
+  data() {
+    return {
+      todoModal: {} as Modal,
+      todoMode: 'add',
+      todoModalData: {
+        id: '',
+        title: '',
+        content: '',
+        status: {
+          id: '',
+          name: ''
+        },
+        deadline: 0,
+        normalTags: [] as string[],
+        customTag: '',
+        tags: [] as string[]
+      } as TodoItem
     }
   },
   methods: {
@@ -60,7 +90,7 @@ export default defineComponent({
       return newIndex
     },
     checkDuplicateName(targetName: string) {
-      const statusNames = this.list.map(statusItem => statusItem.name)
+      const statusNames = this.boardList.map(statusItem => statusItem.name)
       return statusNames.filter(name => name.includes(targetName))
     },
     getMaxIndex(arr: string[], targetName: string) {
@@ -70,7 +100,18 @@ export default defineComponent({
     },
     getStatusList() {
       this.$emit('get-status-list')
+    },
+    toggleTodoModal(isShow: boolean, mode: string, data?: TodoItem) {
+      isShow ? this.todoModal.show() : this.todoModal.hide()
+      this.todoMode = mode
+      if (data) this.todoModalData = data
     }
+  },
+  mounted() {
+    const todoModalDom = document.getElementById('todoModal') as HTMLElement
+    this.todoModal = new Modal(todoModalDom, {
+      keyboard: false
+    })
   }
 })
 </script>

@@ -1,7 +1,14 @@
 export interface TodoItem {
-  id: number
+  id: string
   title: string
   content: string
+  status: {
+    id: string
+    name: string
+  }
   deadline: number
+  isOvertime: boolean
+  normalTags: string[]
+  customTag: string
   tags: string[]
 }

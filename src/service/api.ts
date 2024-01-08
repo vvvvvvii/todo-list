@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { Status } from '@/types/Status'
-import { TodoItem } from '@/types/TodoItem'
 
 axios.defaults.baseURL = 'http://localhost:3000'
 
@@ -11,6 +10,12 @@ const api = {
   getStatus: (url: string) => {
     return axios
       .get(url)
+      .then((res) => res.data)
+      .catch((err) => console.error('cannot get API', err))
+  },
+  getStatusItem: (url: string, id: string) => {
+    return axios
+      .get(`${url}/${id}`)
       .then((res) => res.data)
       .catch((err) => console.error('cannot get API', err))
   },
@@ -37,6 +42,15 @@ const api = {
         console.log(res.data)
       })
       .catch((err) => console.error('cannot delete API', err))
+  },
+  getTags: (url: string) => {
+    return axios
+      .get(url)
+      .then((res) => {
+        console.log(res.data)
+        return res.data
+      })
+      .catch((err) => console.error('cannot get API', err))
   }
 }
 
