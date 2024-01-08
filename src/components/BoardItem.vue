@@ -12,8 +12,10 @@
       </div>
     </div>
     <div class="card-body py-4 scroll-box">
-      <CardItem v-for="todo in boardData.todoList" :key="todo.id" :todo-item="todo" :board-list="boardList"
-        :board-data="boardData" @toggle-todo-modal="toggleTodoModal" @get-status-list="getStatusList" />
+      <draggable :group="boardData.name" @start="onDragging(true)" @end="onDragging(false)">
+        <CardItem v-for="todo in boardData.todoList" :key="todo.id" :todo-item="todo" :board-list="boardList"
+          :board-data="boardData" @toggle-todo-modal="toggleTodoModal" @get-status-list="getStatusList" />
+      </draggable>
       <div class="text-center">
         <button type="button" class="btn btn-light w-75" @click="openAddModal">新增待辦</button>
       </div>
@@ -32,10 +34,11 @@ import { Status } from '@/types/Status'
 import { TodoItem } from '@/types/TodoItem'
 import { defineComponent, PropType } from 'vue'
 import { Modal } from 'bootstrap'
+import draggable from 'vuedraggable'
 
 export default defineComponent({
   name: 'BoardItem',
-  components: { BoardName, CardItem, DeleteModal },
+  components: { BoardName, CardItem, DeleteModal, draggable },
   props: {
     boardData: {
       required: true,
@@ -49,7 +52,8 @@ export default defineComponent({
   data() {
     return {
       isEditMode: false,
-      deleteModal: {} as Modal
+      deleteModal: {} as Modal,
+      dragging: false
     }
   },
   methods: {
@@ -75,7 +79,7 @@ export default defineComponent({
         deadline: this.setDefaultTimestamp(),
         isOvertime: false,
         normalTags: [] as string[],
-        customTag: '',
+        customTag: null as (null | string),
         tags: [] as string[]
       })
     },
@@ -91,6 +95,9 @@ export default defineComponent({
     },
     toggleTodoModal(isShow: boolean, mode: string, data?: TodoItem) {
       this.$emit('toggle-todo-modal', isShow, mode, data)
+    },
+    onDragging(startDragging: boolean) {
+      this.dragging = startDragging
     }
   },
   mounted() {
