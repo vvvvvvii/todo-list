@@ -1,10 +1,13 @@
 <template>
-  <div class="alert alert-warning alert-dismissible fade show overtime-alert" role="alert">
-    <p class="mb-3"><strong>溫馨小提醒：</strong>下列代辦事項已超時：</p>
+  <div class="alert alert-danger alert-dismissible fade show overtime-alert" role="alert">
+    <h6 class="text-center fs-5">下列代辦事項已超時：</h6>
+    <hr>
     <ul>
-      <li v-for="alertItem in list" :key="alertItem.id">
-        {{ alertItem.title }}
-        <span class="ms-3">原訂完成日： {{ timestampTransfer(alertItem.deadline) }}</span>
+      <li v-for="alertItem in list" :key="alertItem.id" class="d-flex justify-content-center mb-2">
+        <div class="w-50">
+          {{ alertItem.title }}
+        </div>
+        <div class="fs-6">原訂完成日： {{ timestampTransfer(alertItem.deadline) }}</div>
       </li>
     </ul>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -33,7 +36,7 @@ export default defineComponent({
 .overtime-alert {
   width: 33%;
   position: fixed;
-  right: 0;
+  right: 1%;
   bottom: 0;
 }
 </style>

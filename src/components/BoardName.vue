@@ -1,11 +1,12 @@
 <template>
   <div>
-    <h2 class="fs-3" v-show="!isEditMode">
+    <h2 class="fs-4" v-show="!isEditMode">
       {{ boardData.name }}
     </h2>
     <div v-show="isEditMode">
-      <input type="text" class="fs-3" :value="boardData.name" @keyup.enter="onEnterBoardName">
-      <p>按下 enter 完成編輯</p>
+      <input type="text" class="form-control edit-input mb-1 fs-4" :value="boardData.name"
+        @keyup.enter="onEnterBoardName">
+      <p class="fs-6 text-info">按下 enter 完成編輯</p>
     </div>
   </div>
 </template>
@@ -47,9 +48,13 @@ export default defineComponent({
   }
 })
 </script>
-<style scoped>
-.scroll-box {
-  max-height: 70vh;
-  overflow-y: scroll
+<style lang="scss" scoped>
+.edit-input {
+  padding: .25rem .5rem;
+  background: #fcf3a2;
+
+  &:focus {
+    background: #fcf3a2;
+  }
 }
 </style>

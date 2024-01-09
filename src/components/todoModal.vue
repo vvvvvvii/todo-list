@@ -3,16 +3,20 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          {{ mode }}
+          <h3 class="fs-5 fw-bold text-center">
+            {{ modeName }}
+          </h3>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label for="todoModalTitle" class="form-label">標題*</label>
-            <input type="text" v-model.trim="modal.title" class="form-control" id="todoModalTitle">
+            <label for="todoModalTitle" class="form-label">
+              標題<sup class="text-danger">*必填</sup>
+            </label>
+            <input type="text" v-model.trim="modal.title" class="form-control form-control-sm" id="todoModalTitle">
           </div>
           <div class="mb-3">
             <label for="todoModalStatus" class="form-label">狀態</label>
-            <select class="form-select" v-model="modal.status" aria-label="待辦事項狀態" id="todoModalStatus">
+            <select class="form-select form-select-sm" v-model="modal.status" aria-label="待辦事項狀態" id="todoModalStatus">
               <option :value="status" v-for="status in statusNames" :key="status.name">
                 {{ status.name }}
               </option>
@@ -22,30 +26,37 @@
             <div class="d-flex">
               <label for="todoModalTag" class="form-label">Tag</label>
               <div>
-                <span v-for="tag in selectedTags" :key="tag" class="badge bg-primary ms-2">{{ tag }}</span>
+                <span v-for="tag in selectedTags" :key="tag" class="badge bg-dark-primary text-primary ms-2"># {{ tag
+                }}</span>
               </div>
             </div>
-            <select class="form-select" v-model="modal.normalTags" multiple aria-label="待辦事項 Tag" id="todoModalTag">
+            <select class="form-select form-select-sm" v-model="modal.normalTags" multiple aria-label="待辦事項 Tag"
+              id="todoModalTag">
               <option selected disabled>選擇 Tag</option>
               <option :value="tag" v-for="tag in normalTagList" :key="tag">{{ tag }}</option>
             </select>
           </div>
           <div class="mb-3">
             <label for="todoModalCustomTag" class="form-label">客製化 Tag</label>
-            <input type="text" class="form-control" v-model.trim="modal.customTag" id="todoModalCustomTag">
+            <input type="text" class="form-control form-control-sm" v-model.trim="modal.customTag"
+              id="todoModalCustomTag">
           </div>
           <div class="mb-3">
-            <label class="form-label">到期時間*</label>
-            <date-picker v-model="modal.deadline" valueType="timestamp" class="d-block"></date-picker>
+            <label class="form-label">到期時間
+              <sup class="text-danger">*必填</sup>
+            </label>
+            <date-picker v-model="modal.deadline" valueType="timestamp" class="d-block datepicker-input"
+              prefix-class="xmx"></date-picker>
           </div>
-          <div class="mb-3">
-            <label>內文</label>
+          <div>
+            <label class="form-label">內文</label>
             <ckeditor :editor="editor" v-model="modal.content" :config="editorConfig"></ckeditor>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-primary" @click="closeModal">取消</button>
-          <button type="button" class="btn btn-primary" :disabled="!isValidate" @click="onSubmit">
+          <button type="button" class="btn btn-outline-light-info" @click="closeModal">取消</button>
+          <button type="button" class="btn border-info" :class="[isValidate ? 'btn-primary' : 'btn-secondary']"
+            :disabled="!isValidate" @click="onSubmit">
             {{ submitBtnName }}
           </button>
         </div>
@@ -58,6 +69,7 @@ import { Status } from '@/types/Status'
 import { TodoItem } from '@/types/TodoItem'
 import { defineComponent, PropType } from 'vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import '../assets/ckeditor.css'
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import api from '../service/api'
@@ -86,7 +98,19 @@ export default defineComponent({
     return {
       editor: ClassicEditor,
       editorConfig: {
-        // The configuration of the editor.
+        toolbar: {
+          items: [
+            'undo',
+            'redo',
+            '|',
+            'heading',
+            'fontsize',
+            '|',
+            'bold',
+            'italic',
+            'numberedList', 'bulletedList'
+          ]
+        }
       },
       normalTagList: [] as string[],
       targetStatus: {
@@ -111,6 +135,9 @@ export default defineComponent({
     }
   },
   computed: {
+    modeName(): string {
+      return this.mode === 'add' ? '新增待辦' : `編輯「${this.modal.title}」`
+    },
     statusNames(): { id: string, name: string }[] {
       return this.boardList.map(status => {
         const { id, name } = status
@@ -213,3 +240,13 @@ export default defineComponent({
   }
 })
 </script>
+<style >
+/* custom style for datepicker input */
+.datepicker-input input {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  background: #fefada;
+  border: 0;
+}
+</style>

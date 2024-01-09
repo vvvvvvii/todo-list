@@ -1,0 +1,24 @@
+:root {
+  --dark: #060c3a;
+  --primary: #fcf3a2;
+  --light-primary: #fefada;
+  --dark-primary: #c7a003;
+
+  /* input */
+  --ck-color-text: var(--dark);
+  --ck-color-base-background: var(--light-primary);
+  --ck-color-base-border: transparent;
+  /* toolbar */
+  --ck-color-toolbar-background: var(--dark-primary);
+  --ck-color-toolbar-border: transparent;
+  /* toolbar btn */
+  --ck-color-button-on-color: var(--dark-primary);
+  --ck-color-button-on-background: var(--primary);
+  /* hover toolbar btn */
+  --ck-color-button-default-hover-color: var(--dark-primary);
+  --ck-color-button-default-hover-background: var(--primary);
+  --ck-color-button-on-hover-background: var(--primary);
+  /* active toolbar btn */
+  --ck-color-button-default-active-color: var(--dark-primary);
+  --ck-color-button-default-active-background: var(--primary);
+}

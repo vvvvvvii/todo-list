@@ -3,10 +3,10 @@
     <div class="card-header">
       <BoardName :board-data="boardData" :is-edit-mode="isEditMode" @toggle-edit-mode="toggleEditMode" />
       <div class="d-flex">
-        <button class="btn btn-light" type="button" @click="toggleEditMode(true)">
+        <button class="btn" type="button" @click="toggleEditMode(true)">
           <i class="bi bi-pencil-square"></i>
         </button>
-        <button class="btn btn-light" type="button" @click="toggleDeleteModal(true)">
+        <button class="btn" type="button" @click="toggleDeleteModal(true)">
           <i class="bi bi-trash3-fill"></i>
         </button>
       </div>
@@ -18,7 +18,7 @@
       </draggable>
       <p v-if="boardData.todoList.length === 0" class="text-center mb-4">無符合項目</p>
       <div class="text-center">
-        <button type="button" class="btn btn-light w-75" @click="openAddModal">新增待辦</button>
+        <button type="button" class="btn btn-primary w-75" @click="openAddModal">新增待辦</button>
       </div>
     </div>
     <!-- delete status modal -->

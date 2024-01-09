@@ -5,7 +5,7 @@
         <div class="d-flex mb-3">
           <!-- searchbar -->
           <input type="text" class="form-control w-75" placeholder="請輸入待辦事項標題" v-model="searchTerms">
-          <button type="button" class="btn btn-primary ms-3" @click="onSubmit">搜尋</button>
+          <button type="button" class="btn btn-success ms-3" @click="onSubmit">搜尋</button>
         </div>
         <div class="d-flex flex-wrap">
           <!-- filter checkboxes -->
@@ -112,16 +112,16 @@ export default defineComponent({
     }
   },
   computed: {
-    sunBtn() {
-      return this.themeColor === 'light' ? ['btn-warning', 'border-dark'] : ['text-warning', 'border-dark']
+    sunBtn(): string[] {
+      return this.themeColor === 'light' ? ['btn-primary', 'border-dark'] : ['text-dark-primary', 'border-dark']
     },
-    sunBtnIcon() {
+    sunBtnIcon(): string {
       return this.themeColor === 'light' ? 'bi-brightness-high-fill' : 'bi-brightness-high'
     },
-    moonBtn() {
+    moonBtn(): string {
       return this.themeColor === 'light' ? 'btn-outline-dark' : 'btn-dark'
     },
-    moonBtnIcon() {
+    moonBtnIcon(): string {
       return this.themeColor === 'light' ? 'bi-moon' : 'bi-moon-fill'
     }
   }

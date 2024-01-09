@@ -75,7 +75,8 @@ hr {
 //    margin for easier control within type scales as it avoids margin collapsing.
 
 %heading {
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   font-family: $headings-font-family;
   font-style: $headings-font-style;
   font-weight: $headings-font-weight;
@@ -119,7 +120,8 @@ h6 {
 // bottom margin to use `rem` units instead of `em`.
 
 p {
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 // Abbreviations
@@ -146,7 +148,7 @@ address {
 
 ol,
 ul {
-  padding-left: 2rem;
+  padding-left: 0;
   list-style-type: none;
 }
 
@@ -154,7 +156,7 @@ ol,
 ul,
 dl {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 ol ol,

@@ -1,9 +1,9 @@
 <template>
-  <div class="card mb-4 " :class="{ 'border-danger': todoItem.isOvertime }">
+  <div class="card mb-4" :class="[todoItem.isOvertime ? 'overtime-card' : 'normal-card']">
     <div class="card-header">
       <h3 class="fs-5 text-truncate">{{ todoItem.title }}</h3>
       <div class="position-relative">
-        <button class="btn btn-light" type="button" @click="toggleToolList">
+        <button class="btn" type="button" @click="toggleToolList">
           <i class="bi bi-three-dots-vertical"></i>
         </button>
         <ul class="list-group tool-list" v-show="showToolList">
@@ -13,17 +13,17 @@
         </ul>
       </div>
     </div>
-    <div class="card-body row">
-      <div class="col-9">
-        <div class="text-truncate-2" v-html="todoItem.content" v-if="todoItem.content"></div>
-        <div v-else>無更多說明</div>
+    <div class="card-body">
+      <div class="row card-info">
+        <div class="col-9">
+          <div class="text-truncate-2" v-html="todoItem.content" v-if="todoItem.content"></div>
+          <div v-else>無更多說明</div>
+        </div>
+        <div class="col-3 card-info-border" v-if="todoItem.tags.length > 0">
+          <p v-for="tag in todoItem.tags" :key="tag" class="fs-6"># {{ tag }}</p>
+        </div>
       </div>
-      <div class="col-3 border-start" v-if="todoItem.tags.length > 0">
-        <p class="mb-0" v-for="tag in todoItem.tags" :key="tag"># {{ tag }}</p>
-      </div>
-    </div>
-    <div class="card-footer">
-      <p>
+      <p class="fs-6 text-info text-center">
         <i class="bi bi-hourglass-split"></i>
         <span class="ms-1">
           {{ deadlineDateTransfer }}
@@ -137,9 +137,52 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.overtime-card {
+  background: rgba(#f15555, 0.05);
+
+  .card-header {
+    background: #f15555;
+    color: #fff
+  }
+
+  .btn {
+    color: #fff;
+  }
+
+  .card-info {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(#f34545, 0.2);
+
+    &-border {
+      border-left: 1px solid rgba(#f34545, 0.2)
+    }
+  }
+}
+
+.normal-card {
+  /* background: rgba(#c7a003, 0.1); */
+  background: rgba(#fcf3a2, 0.2);
+
+  .card-header {
+    background: #fcf3a2
+  }
+
+  .card-info {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+
+    border-bottom: 1px solid rgba(#c7a003, 0.2);
+
+    &-border {
+      border-left: 1px solid rgba(#c7a003, 0.2)
+    }
+  }
+}
+
 .tool-list {
   position: absolute;
-  top: 110%
+  top: 110%;
 }
 </style>

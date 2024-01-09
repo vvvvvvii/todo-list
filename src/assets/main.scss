@@ -1,9 +1,17 @@
-@import '~bootstrap';
+@import '~bootstrap/scss/functions';
+@import './bootstrap/variables';
+@import '~bootstrap/scss/variables-dark';
+@import '~bootstrap/scss/mixins';
 @import './bootstrap/mixins/container';
+@import '~bootstrap/scss/bootstrap';
+@import './bootstrap/root';
 @import './bootstrap/reboot';
 @import './bootstrap/card';
+@import './bootstrap/alert';
 @import './bootstrap/list-group';
 @import './bootstrap/helpers/text-truncation';
+
+@import './datepicker';
 
 // // Configuration
 // @import "functions";
