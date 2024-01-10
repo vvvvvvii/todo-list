@@ -77,7 +77,11 @@ export default defineComponent({
       this.showToolList = !this.showToolList
     },
     openEditModal() {
-      this.$emit('toggle-todo-modal', true, 'edit', this.todoItem)
+      // 確認有無 temp data
+      const tempData = sessionStorage.getItem(this.todoItem.id)
+      // 有 tempData 則用，沒有則用 API 原先取到的資料
+      const modalData = tempData ? JSON.parse(tempData) : this.todoItem
+      this.$emit('toggle-todo-modal', true, 'edit', modalData)
     },
     toggleDeleteModal(isShow: boolean) {
       isShow ? this.deleteModal.show() : this.deleteModal.hide()

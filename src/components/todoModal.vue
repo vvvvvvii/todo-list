@@ -55,6 +55,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-light-info" @click="closeModal">取消</button>
+          <button type="button" class="btn btn-outline-light-info" @click="saveTemp">暫存並離開</button>
           <button type="button" class="btn border-info" :class="[isValidate ? 'btn-primary' : 'btn-secondary']"
             :disabled="!isValidate" @click="onSubmit">
             {{ submitBtnName }}
@@ -181,6 +182,12 @@ export default defineComponent({
     closeModal() {
       this.$emit('toggle-todo-modal', false)
     },
+    saveTemp() {
+      const tempData = JSON.stringify(this.modal)
+      const sessionName = this.mode === 'add' ? 'add' : this.modal.id
+      sessionStorage.setItem(sessionName, tempData)
+      this.closeModal()
+    },
     async onSubmit() {
       await this.findTargetStatus()
       await this.generateNewStatus()
@@ -203,8 +210,12 @@ export default defineComponent({
     },
     addTodo() {
       this.targetStatus.todoList.push(this.modal)
+      // 新增後自動刪除暫存
+      sessionStorage.removeItem('add')
     },
     editTodo() {
+      // 完成後自動刪除暫存
+      sessionStorage.removeItem(this.modal.id)
       const { todoList } = this.targetStatus
 
       if (this.modal.status.id === this.defaultData.status.id) {

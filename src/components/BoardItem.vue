@@ -68,8 +68,10 @@ export default defineComponent({
       isShow ? this.deleteModal.show() : this.deleteModal.hide()
     },
     openAddModal() {
+      // 確認有無 tempData
+      const tempData = sessionStorage.getItem('add')
       const { id, name } = this.boardData
-      this.toggleTodoModal(true, 'add', {
+      const defaultData = {
         id: this.generateRandomId(),
         title: '',
         content: '',
@@ -82,7 +84,11 @@ export default defineComponent({
         normalTags: [] as string[],
         customTag: null as (null | string),
         tags: [] as string[]
-      })
+      }
+      // 有 tempData 則用，沒有則用 default blank modal
+      const modalData = tempData ? JSON.parse(tempData) : defaultData
+
+      this.toggleTodoModal(true, 'add', modalData)
     },
     setDefaultTimestamp() {
       const today = new Date()
