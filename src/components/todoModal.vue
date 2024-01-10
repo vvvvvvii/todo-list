@@ -240,13 +240,24 @@ export default defineComponent({
   }
 })
 </script>
-<style >
+<style lang="scss">
 /* custom style for datepicker input */
 .datepicker-input input {
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   border-radius: 0.25rem;
-  background: #fefada;
   border: 0;
+}
+
+[data-bs-theme='light'] {
+  .datepicker-input input {
+    background: #fefada;
+  }
+}
+
+[data-bs-theme='dark'] {
+  .datepicker-input input {
+    background: #1f2345;
+  }
 }
 </style>

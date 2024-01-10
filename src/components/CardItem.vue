@@ -138,45 +138,85 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.overtime-card {
-  background: rgba(#f15555, 0.05);
-
-  .card-header {
-    background: #f15555;
-    color: #fff
-  }
-
-  .btn {
-    color: #fff;
-  }
-
-  .card-info {
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid rgba(#f34545, 0.2);
-
-    &-border {
-      border-left: 1px solid rgba(#f34545, 0.2)
-    }
-  }
+.card-info {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
-.normal-card {
-  /* background: rgba(#c7a003, 0.1); */
-  background: rgba(#fcf3a2, 0.2);
+[data-bs-theme='light'] {
+  .overtime-card {
+    background: rgba(#f15555, 0.05);
 
-  .card-header {
-    background: #fcf3a2
+    .card-header {
+      background: #f15555;
+      color: #fff
+    }
+
+    .btn {
+      color: #fff;
+    }
+
+    .card-info {
+      border-bottom: 1px solid rgba(#f34545, 0.2);
+
+      &-border {
+        border-left: 1px solid rgba(#f34545, 0.2)
+      }
+    }
   }
 
-  .card-info {
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
+  .normal-card {
+    background: rgba(#fcf3a2, 0.2);
 
-    border-bottom: 1px solid rgba(#c7a003, 0.2);
+    .card-header {
+      background: #fcf3a2
+    }
 
-    &-border {
-      border-left: 1px solid rgba(#c7a003, 0.2)
+    .card-info {
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+
+      border-bottom: 1px solid rgba(#c7a003, 0.2);
+
+      &-border {
+        border-left: 1px solid rgba(#c7a003, 0.2)
+      }
+    }
+  }
+
+}
+
+[data-bs-theme='dark'] {
+  .overtime-card {
+    background: rgba(#5e0909, 0.5);
+
+    .card-header {
+      background: #5e0909;
+    }
+
+    .card-info {
+      border-bottom: 1px solid rgba(#f34545, 0.2);
+
+      &-border {
+        border-left: 1px solid rgba(#f34545, 0.2)
+      }
+    }
+  }
+
+  .normal-card {
+    background: rgba(#2d3466, 0.3);
+
+    .card-header {
+      background: #2d3466;
+    }
+
+    .card-info {
+
+      border-bottom: 1px solid rgba(#2d3466, 0.6);
+
+      &-border {
+        border-left: 1px solid rgba(#2d3466, 0.6)
+      }
     }
   }
 }

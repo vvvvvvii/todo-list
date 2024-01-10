@@ -26,22 +26,14 @@
         </div>
       </div>
       <div class="col-2">
-        <!-- change theme btn -->
-        <div class="btn-group" role="group">
-          <button type="button" class="btn" :class="sunBtn" @click="toggleThemeColor('light')">
-            <i class="bi" :class="sunBtnIcon"></i>
-          </button>
-          <button type="button" class="btn" :class="moonBtn" @click="toggleThemeColor('dark')">
-            <i class="bi" :class="moonBtnIcon"></i>
-          </button>
-        </div>
+        <ThemeBtn />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" type="module">
-
+import ThemeBtn from './ThemeBtn.vue'
 import { TodoItem } from '@/types/TodoItem'
 import { defineComponent, PropType } from 'vue'
 import { Status } from '../types/Status'
@@ -52,18 +44,16 @@ export default defineComponent({
     boardList: {
       required: true,
       type: [] as PropType<Status[]>
-    },
-    themeColor: {
-      required: true,
-      type: String
     }
   },
+  components: { ThemeBtn },
   data() {
     return {
       searchTerms: '',
       tagList: [] as string[],
       checkedOvertime: false,
-      checkedTags: [] as string[]
+      checkedTags: [] as string[],
+      themeColor: 'light'
     }
   },
   watch: {
@@ -73,7 +63,9 @@ export default defineComponent({
   },
   methods: {
     setTagList() {
-      this.tagList = this.boardList.map(status => status.todoList.map(todo => todo.tags)).flat(2)
+      const selectedTagList = this.boardList.map(status => status.todoList.map(todo => todo.tags)).flat(2)
+      const uniqTagList = new Set([...selectedTagList])
+      this.tagList = Array.from(uniqTagList)
     },
     organizedTodos(list: TodoItem[]) {
       let updatedList = [...list]
@@ -108,18 +100,23 @@ export default defineComponent({
       this.$emit('set-filter-status-list', updatedStatusList)
     },
     toggleThemeColor(mode: 'light' | 'dark') {
-      this.$emit('toggle-theme-color', mode)
+      // 調整 themeColor 以設定元件樣式
+      this.themeColor = mode
+      //  data-bs-theme 屬性需下在 body
+      const body = document.querySelector('body')
+      if (body) body.setAttribute('data-bs-theme', mode)
     }
   },
   computed: {
+    // primary / light 等依 data-bs-theme='light' 而定
     sunBtn(): string[] {
-      return this.themeColor === 'light' ? ['btn-primary', 'border-dark'] : ['text-dark-primary', 'border-dark']
+      return this.themeColor === 'light' ? ['btn-primary', 'border-dark'] : ['btn-outline-primary']
     },
     sunBtnIcon(): string {
       return this.themeColor === 'light' ? 'bi-brightness-high-fill' : 'bi-brightness-high'
     },
-    moonBtn(): string {
-      return this.themeColor === 'light' ? 'btn-outline-dark' : 'btn-dark'
+    moonBtn(): string[] {
+      return this.themeColor === 'light' ? ['btn-outline-dark'] : ['btn-light', 'border-primary']
     },
     moonBtnIcon(): string {
       return this.themeColor === 'light' ? 'bi-moon' : 'bi-moon-fill'

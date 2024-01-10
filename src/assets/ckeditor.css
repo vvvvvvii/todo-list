@@ -4,21 +4,52 @@
   --light-primary: #fefada;
   --dark-primary: #c7a003;
 
-  /* input */
-  --ck-color-text: var(--dark);
-  --ck-color-base-background: var(--light-primary);
-  --ck-color-base-border: transparent;
-  /* toolbar */
-  --ck-color-toolbar-background: var(--dark-primary);
-  --ck-color-toolbar-border: transparent;
-  /* toolbar btn */
-  --ck-color-button-on-color: var(--dark-primary);
-  --ck-color-button-on-background: var(--primary);
-  /* hover toolbar btn */
-  --ck-color-button-default-hover-color: var(--dark-primary);
-  --ck-color-button-default-hover-background: var(--primary);
-  --ck-color-button-on-hover-background: var(--primary);
-  /* active toolbar btn */
-  --ck-color-button-default-active-color: var(--dark-primary);
-  --ck-color-button-default-active-background: var(--primary);
+  [data-bs-theme='light'] {
+    /* generic */
+    --ck-color-text: var(--dark);
+    --ck-color-base-background: var(--light-primary);
+    --ck-color-base-border: transparent;
+    /* dropdown list panel*/
+    --ck-color-list-background: var(--light-primary);
+    --ck-color-list-button-on-background: var(--dark-primary);
+    --ck-color-list-button-hover-background: var(--dark-primary);
+    --ck-color-list-button-on-background-focus: var(--dark-primary);
+    /* toolbar */
+    --ck-color-toolbar-background: var(--dark-primary);
+    --ck-color-toolbar-border: transparent;
+    /* toolbar btn */
+    --ck-color-button-on-color: var(--dark-primary);
+    --ck-color-button-on-background: var(--primary);
+    /* hover toolbar btn */
+    --ck-color-button-default-hover-color: var(--dark-primary);
+    --ck-color-button-default-hover-background: var(--primary);
+    --ck-color-button-on-hover-background: var(--primary);
+    /* active toolbar btn */
+    --ck-color-button-default-active-color: var(--dark-primary);
+    --ck-color-button-default-active-background: var(--primary);
+  }
+  [data-bs-theme='dark'] {
+    /* generic */
+    --ck-color-text: var(--light-primary);
+    --ck-color-base-background: var(--dark);
+    --ck-color-base-border: transparent;
+    /* dropdown list panel*/
+    --ck-color-list-background: var(--dark);
+    --ck-color-list-button-on-background: var(--dark-primary);
+    --ck-color-list-button-hover-background: var(--dark-primary);
+    --ck-color-list-button-on-background-focus: var(--dark-primary);
+    /* toolbar */
+    --ck-color-toolbar-background: #847c5e;
+    --ck-color-toolbar-border: transparent;
+    /* toolbar btn */
+    --ck-color-button-on-color: var(--dark-primary);
+    --ck-color-button-on-background: var(--primary);
+    /* hover toolbar btn */
+    --ck-color-button-default-hover-color: var(--dark-primary);
+    --ck-color-button-default-hover-background: var(--dark-primary);
+    --ck-color-button-on-hover-background: var(--primary);
+    /* active toolbar btn */
+    --ck-color-button-default-active-color: var(--dark-primary);
+    --ck-color-button-default-active-background: var(--primary);
+  }
 }
