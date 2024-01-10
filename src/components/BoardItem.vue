@@ -1,7 +1,8 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <BoardName :board-data="boardData" :is-edit-mode="isEditMode" @toggle-edit-mode="toggleEditMode" />
+      <BoardName :board-data="boardData" :is-edit-mode="isEditMode" @toggle-edit-mode="toggleEditMode"
+        @get-status-list="getStatusList" />
       <div class="d-flex">
         <button class="btn" type="button" @click="toggleEditMode(true)">
           <i class="bi bi-pencil-square"></i>

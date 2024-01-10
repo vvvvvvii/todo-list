@@ -7,7 +7,7 @@
       </div>
       <div class="col-4">
         <div class="text-center">
-          <button type="button" class="btn btn-light w-75" @click="addStatus">新增狀態</button>
+          <button type="button" class="btn btn-light-info w-75" @click="addStatus">新增狀態</button>
         </div>
       </div>
     </div>

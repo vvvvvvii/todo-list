@@ -29,18 +29,18 @@ export default defineComponent({
     }
   },
   methods: {
-    onEnterBoardName(e: KeyboardEvent) {
+    async onEnterBoardName(e: KeyboardEvent) {
       const input = e.target as HTMLInputElement
-      this.updateBoard(input.value)
-      this.$emit('toggleEditMode', false)
+      await this.updateBoard(input.value)
       this.getStatusList()
+      this.$emit('toggle-edit-mode', false)
     },
-    updateBoard(newName: string) {
+    async updateBoard(newName: string) {
       const newStatus = {
         ...this.boardData,
         name: newName
       }
-      api.putStatus('statusList', newStatus)
+      await api.putStatus('statusList', newStatus)
     },
     getStatusList() {
       this.$emit('get-status-list')

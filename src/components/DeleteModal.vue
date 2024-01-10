@@ -29,12 +29,11 @@ export default defineComponent({
     closeModal() {
       this.$emit('toggle-delete-modal', false)
     },
-    deleteStatusBoard() {
+    async deleteStatusBoard() {
       this.closeModal()
-      api.deleteStatus('statusList', this.statusId)
+      await api.deleteStatus('statusList', this.statusId)
       this.$emit('get-status-list')
     }
   }
-
 })
 </script>
