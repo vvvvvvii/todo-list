@@ -79,19 +79,14 @@ $body-bg-dark: $dark;
     --bs-card-bg: #0a0e26;
   }
 
-  .list-group {
-    --bs-list-group-color: #fff;
-    --bs-list-group-bg: var(--bs-dark);
-
-    --bs-list-group-action-hover-color: var(--bs-dark);
-    --bs-list-group-action-hover-bg: var(--bs-light);
-
-    --bs-list-group-action-active-color: var(--bs-dark);
-    --bs-list-group-action-active-bg: var(--bs-light);
-
-    --bs-list-group-active-color: var(--bs-dark);
-    --bs-list-group-active-bg: var(--bs-light);
-    --bs-list-group-active-border-color: var(--bs-light);
+  .dropdown-menu {
+    --bs-dropdown-color: #fff;
+    --bs-dropdown-bg: var(--bs-dark);
+    --bs-dropdown-link-color: #fff;
+    --bs-dropdown-link-hover-color: var(--bs-dark);
+    --bs-dropdown-link-hover-bg: var(--bs-light);
+    --bs-dropdown-link-active-color: var(--bs-dark);
+    --bs-dropdown-link-active-bg: var(--bs-light);
   }
 
   .form-control,

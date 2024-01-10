@@ -2,14 +2,14 @@
   <div class="card mb-4" :class="[todoItem.isOvertime ? 'overtime-card' : 'normal-card']">
     <div class="card-header">
       <h3 class="fs-5 text-truncate">{{ todoItem.title }}</h3>
-      <div class="position-relative">
-        <button class="btn" type="button" @click="toggleToolList">
+      <div class="dropdown">
+        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-three-dots-vertical"></i>
         </button>
-        <ul class="list-group tool-list" v-show="showToolList">
-          <li><a href="#" class="list-group-item list-group-item-action" @click="openEditModal">edit</a></li>
-          <li><a href="#" class="list-group-item list-group-item-action" @click="toggleDeleteModal(true)">delete</a></li>
-          <li><a href="#" class="list-group-item list-group-item-action" @click="copyTodo">copy</a></li>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" @click="openEditModal">編輯</a></li>
+          <li><a class="dropdown-item" href="#" @click="toggleDeleteModal(true)">刪除</a></li>
+          <li><a class="dropdown-item" href="#" @click="copyTodo">複製</a></li>
         </ul>
       </div>
     </div>
@@ -73,9 +73,6 @@ export default defineComponent({
     }
   },
   methods: {
-    toggleToolList() {
-      this.showToolList = !this.showToolList
-    },
     openEditModal() {
       // 確認有無 temp data
       const tempData = sessionStorage.getItem(this.todoItem.id)
