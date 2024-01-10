@@ -27,10 +27,17 @@ export default Vue.extend({
       filterStatusList: [] as Status[]
     }
   },
+  watch: {
+    statusList: {
+      deep: true,
+      handler() {
+        this.setFilterStatusList(this.statusList)
+      }
+    }
+  },
   methods: {
     async getStatusList() {
       this.statusList = await api.getStatus('/statusList')
-      this.setFilterStatusList(this.statusList)
     },
     getTodayTimestamp() {
       const today = new Date()
@@ -54,7 +61,7 @@ export default Vue.extend({
           })
         }
       })
-      this.statusList = updatedStatusList
+      this.statusList = [...updatedStatusList]
       this.setTodoList()
     },
     setTodoList() {
