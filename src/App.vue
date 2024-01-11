@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="py-4">
-    <ToolBar :board-list="statusList" @set-filter-status-list="setFilterStatusList" />
+    <ToolBar :status-list="statusList" @set-filter-status-list="setFilterStatusList" />
     <BoardList :board-list="filterStatusList" :today-timestamp="todayTimestamp" @get-status-list="getStatusList" />
     <OvertimeAlert :list="overtimeTodos" v-if="overtimeTodos.length > 0" />
   </div>

@@ -1,5 +1,4 @@
 <template>
-  <!-- change theme btn -->
   <div class="btn-group" role="group">
     <button type="button" class="btn" :class="sunBtn" @click="toggleThemeColor('light')">
       <i class="bi" :class="sunBtnIcon"></i>
