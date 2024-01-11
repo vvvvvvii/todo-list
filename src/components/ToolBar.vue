@@ -52,8 +52,7 @@ export default defineComponent({
       searchTerms: '',
       tagList: [] as string[],
       checkedOvertime: false,
-      checkedTags: [] as string[],
-      themeColor: 'light'
+      checkedTags: [] as string[]
     }
   },
   watch: {
@@ -98,28 +97,6 @@ export default defineComponent({
         }
       })
       this.$emit('set-filter-status-list', updatedStatusList)
-    },
-    toggleThemeColor(mode: 'light' | 'dark') {
-      // 調整 themeColor 以設定元件樣式
-      this.themeColor = mode
-      //  data-bs-theme 屬性需下在 body
-      const body = document.querySelector('body')
-      if (body) body.setAttribute('data-bs-theme', mode)
-    }
-  },
-  computed: {
-    // primary / light 等依 data-bs-theme='light' 而定
-    sunBtn(): string[] {
-      return this.themeColor === 'light' ? ['btn-primary', 'border-dark'] : ['btn-outline-primary']
-    },
-    sunBtnIcon(): string {
-      return this.themeColor === 'light' ? 'bi-brightness-high-fill' : 'bi-brightness-high'
-    },
-    moonBtn(): string[] {
-      return this.themeColor === 'light' ? ['btn-outline-dark'] : ['btn-light', 'border-primary']
-    },
-    moonBtnIcon(): string {
-      return this.themeColor === 'light' ? 'bi-moon' : 'bi-moon-fill'
     }
   }
 })

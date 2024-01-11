@@ -33,15 +33,19 @@ export default defineComponent({
   computed: {
     // primary / light 等依 data-bs-theme='light' 而定
     sunBtn(): string[] {
+      // light mode btn 樣式
       return this.themeColor === 'light' ? ['btn-primary', 'border-dark'] : ['btn-outline-primary']
     },
     sunBtnIcon(): string {
+      // light mode btn icon 內容
       return this.themeColor === 'light' ? 'bi-brightness-high-fill' : 'bi-brightness-high'
     },
     moonBtn(): string[] {
+      // dark mode btn 樣式
       return this.themeColor === 'light' ? ['btn-outline-dark'] : ['btn-light', 'border-primary']
     },
     moonBtnIcon(): string {
+      // dark mode btn icon 內容
       return this.themeColor === 'light' ? 'bi-moon' : 'bi-moon-fill'
     }
   }
