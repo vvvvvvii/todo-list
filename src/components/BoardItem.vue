@@ -82,9 +82,8 @@ export default defineComponent({
         },
         deadline: this.setDefaultTimestamp(),
         isOvertime: false,
-        normalTags: [] as string[],
-        customTag: null as (null | string),
-        tags: [] as string[]
+        tags: [] as string[],
+        tempTag: ''
       }
       // 有 tempData 則用，沒有則用 default blank modal
       const modalData = tempData ? JSON.parse(tempData) : defaultData

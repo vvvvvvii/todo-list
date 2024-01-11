@@ -1645,10 +1645,11 @@ $progress-bar-transition: width 0.6s ease !default;
 
 // scss-docs-start list-group-variables
 $list-group-color: $light !default;
-$list-group-bg: rgba($dark-primary, 0.5) !default;
+$list-group-bg: $dark-primary !default;
 $list-group-border-color: var(--#{$prefix}border-color) !default;
 $list-group-border-width: 0 !default;
-$list-group-border-radius: var(--#{$prefix}border-radius) !default;
+$list-group-border-radius: 0 0 var(--bs-border-radius)
+  var(--#{$prefix}border-radius) !default;
 
 $list-group-item-padding-y: $spacer * 0.5 !default;
 $list-group-item-padding-x: $spacer !default;
@@ -1657,9 +1658,9 @@ $list-group-item-bg-scale: -80% !default; // Deprecated in v5.3.0
 $list-group-item-color-scale: 40% !default; // Deprecated in v5.3.0
 // fusv-enable
 
-$list-group-hover-bg: rgba($dark-primary, 0.8) !default;
+$list-group-hover-bg: $dark-primary !default;
 $list-group-active-color: rgba($dark, 0.8) !default;
-$list-group-active-bg: rgba($dark-primary, 0.8) !default;
+$list-group-active-bg: $dark-primary !default;
 $list-group-active-border-color: $list-group-active-bg !default;
 
 $list-group-disabled-color: var(--#{$prefix}secondary-color) !default;
@@ -1669,7 +1670,7 @@ $list-group-action-color: var(--#{$prefix}secondary-color) !default;
 $list-group-action-hover-color: var(--#{$prefix}emphasis-color) !default;
 
 $list-group-action-active-color: rgba($dark, 0.8) !default;
-$list-group-action-active-bg: rgba($dark-primary, 0.8) !default;
+$list-group-action-active-bg: $dark-primary !default;
 // scss-docs-end list-group-variables
 
 // Image thumbnails

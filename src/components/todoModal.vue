@@ -1,7 +1,7 @@
 <template>
   <div class="modal fade" id="todoModal" tabindex="-1">
     <div class="modal-dialog">
-      <div class="modal-content">
+      <div class="modal-content" @click="onModalContentClick">
         <div class="modal-header">
           <h3 class="fs-5 fw-bold text-center">
             {{ modeName }}
@@ -23,23 +23,24 @@
             </select>
           </div>
           <div class="mb-3">
-            <div class="d-flex">
-              <label for="todoModalTag" class="form-label">Tag</label>
-              <div>
-                <span v-for="tag in selectedTags" :key="tag" class="badge bg-dark-primary text-primary ms-2"># {{ tag
-                }}</span>
+            <label for="todoModalTag" class="form-label">Tag</label>
+            <span v-for="(tag, tagIndex) in modal.tags" :key="tag" class="badge bg-dark-primary text-primary ms-2">
+              # {{ tag }}
+              <a href="#" @click="removeTag(tagIndex)" class="d-block ms-1"><i class="bi bi-x-lg"></i></a>
+            </span>
+            <div class="position-relative">
+              <div class="form-select" id="tagSelect" @click="toggleTagOptions">
+                <input type="text" class="form-select-hint" placeholder="下拉選擇或輸入客製化 Tag" v-model.trim="modal.tempTag"
+                  @keyup.enter="addTag">
+              </div>
+              <div class="list-group tag-list" v-show="showTagOptions">
+                <a href="#" class="list-group-item list-group-item-action" v-for="tag in tagOptions" :key="tag"
+                  @click="toggleSelectedTag(tag)">
+                  <i class="bi" :class="[modal.tags.includes(tag) ? 'bi-check-square-fill' : 'bi-square']"></i>
+                  <span class="ms-2">{{ tag }}</span>
+                </a>
               </div>
             </div>
-            <select class="form-select form-select-sm" v-model="modal.normalTags" multiple aria-label="待辦事項 Tag"
-              id="todoModalTag">
-              <option selected disabled>選擇 Tag</option>
-              <option :value="tag" v-for="tag in normalTagList" :key="tag">{{ tag }}</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="todoModalCustomTag" class="form-label">客製化 Tag</label>
-            <input type="text" class="form-control form-control-sm" v-model.trim="modal.customTag"
-              id="todoModalCustomTag">
           </div>
           <div class="mb-3">
             <label class="form-label">到期時間
@@ -113,7 +114,8 @@ export default defineComponent({
           ]
         }
       },
-      normalTagList: [] as string[],
+      tagOptions: [] as string[],
+      showTagOptions: false,
       targetStatus: {
         id: '',
         name: '',
@@ -129,9 +131,8 @@ export default defineComponent({
         },
         deadline: 0,
         isOvertime: false,
-        normalTags: [] as string[],
-        customTag: null as (null | string),
-        tags: [] as string[]
+        tags: [] as string[],
+        tempTag: '' // 沒按 enter 送出的 tag 開啟 modal 時一律清空
       } as TodoItem
     }
   },
@@ -155,14 +156,7 @@ export default defineComponent({
     },
     submitBtnName(): string {
       return this.mode === 'add' ? '新增' : '完成'
-    },
-    selectedTags(): string[] {
-      const { normalTags, customTag } = this.modal
-      const tags = [...normalTags]
-      if (customTag) tags.push(customTag)
-      return tags
     }
-
   },
   watch: {
     defaultData() {
@@ -176,8 +170,24 @@ export default defineComponent({
     setModal() {
       this.modal = JSON.parse(JSON.stringify(this.defaultData))
     },
-    async getNormalTags() {
-      this.normalTagList = await api.getStatus('/tagList')
+    async getTagOptions() {
+      this.tagOptions = await api.getStatus('/tagList')
+    },
+    toggleSelectedTag(tag: string) {
+      const { tags } = this.modal
+      if (tags.includes(tag)) {
+        const deleteIndex = tags.indexOf(tag)
+        this.removeTag(deleteIndex)
+      } else {
+        this.modal.tags.push(tag)
+      }
+    },
+    addTag() {
+      if (this.modal.tempTag) this.modal.tags.push(this.modal.tempTag)
+      this.modal.tempTag = ''
+    },
+    removeTag(index: number) {
+      this.modal.tags.splice(index, 1)
     },
     closeModal() {
       this.$emit('toggle-todo-modal', false)
@@ -200,7 +210,6 @@ export default defineComponent({
       this.targetStatus = await api.getStatusItem('/statusList', targetStatusId)
     },
     async generateNewStatus() {
-      this.modal.tags = this.selectedTags
       if (this.mode === 'add') {
         this.addTodo()
       } else {
@@ -212,10 +221,13 @@ export default defineComponent({
       this.targetStatus.todoList.push(this.modal)
       // 新增後自動刪除暫存
       sessionStorage.removeItem('add')
+      this.modal.tempTag = ''
     },
     editTodo() {
       // 完成後自動刪除暫存
       sessionStorage.removeItem(this.modal.id)
+      this.modal.tempTag = ''
+
       const { todoList } = this.targetStatus
 
       if (this.modal.status.id === this.defaultData.status.id) {
@@ -244,10 +256,20 @@ export default defineComponent({
     },
     getStatusList() {
       this.$emit('get-status-list')
+    },
+    onModalContentClick(e: Event) {
+      const clickPosition = e.target as HTMLElement
+      if (clickPosition.id !== 'tagSelect') this.closeTagOptions()
+    },
+    closeTagOptions() {
+      this.showTagOptions = false
+    },
+    toggleTagOptions() {
+      this.showTagOptions = !this.showTagOptions
     }
   },
   mounted() {
-    this.getNormalTags()
+    this.getTagOptions()
   }
 })
 </script>
@@ -258,6 +280,23 @@ export default defineComponent({
   font-size: 0.875rem;
   border-radius: 0.25rem;
   border: 0;
+}
+
+.form-select-hint {
+  border: 0;
+  width: 100%;
+  font-size: 0.875rem;
+  background: transparent;
+  color: inherit;
+}
+
+.tag-list {
+  position: absolute;
+  top: 110%;
+  z-index: 100;
+  width: 100%;
+  max-height: 100px;
+  overflow: scroll;
 }
 
 [data-bs-theme='light'] {

@@ -52,9 +52,9 @@ export default defineComponent({
           name: ''
         },
         deadline: 0,
-        normalTags: [] as string[],
-        customTag: null as (null | string),
-        tags: [] as string[]
+        isOvertime: false,
+        tags: [] as string[],
+        tempTag: ''
       } as TodoItem
     }
   },
@@ -104,7 +104,12 @@ export default defineComponent({
     toggleTodoModal(isShow: boolean, mode: string, data?: TodoItem) {
       isShow ? this.todoModal.show() : this.todoModal.hide()
       this.todoMode = mode
-      if (data) this.todoModalData = data
+      if (data) {
+        this.todoModalData = {
+          ...data,
+          tempTag: '' // 無送出的 tag 一律清空
+        }
+      }
     }
   },
   mounted() {
