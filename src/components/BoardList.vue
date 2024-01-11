@@ -34,30 +34,23 @@ export default defineComponent({
     return {
       todoModal: {} as Modal,
       todoMode: 'add',
-      todoModalData: {
-        id: '',
-        title: '',
-        content: '',
-        status: {
-          id: '',
-          name: ''
-        },
-        deadline: 0,
-        isOvertime: false,
-        tags: [] as string[],
-        tempTag: ''
-      } as TodoItem
+      todoModalData: {} as TodoItem
     }
   },
   methods: {
-    addStatus() {
+    async addStatus() {
+      // 新增狀態
       const newStatus = this.setBlankStatus()
-      api.postStatus('/statusList', newStatus)
+      await api.postStatus('/statusList', newStatus)
+      // 重新取得最新 statusList
       store.dispatch('getStatusList')
     },
     setBlankStatus() {
+      // 產生隨機 ID
       const id = this.generateRandomId()
+      // 確認沒有重複 New Board 名稱
       const name = `New Board ${this.setNewIndex()}`
+      // 設定空白 status
       return {
         id,
         name,
@@ -65,13 +58,15 @@ export default defineComponent({
       }
     },
     generateRandomId() {
+      // 以隨機字母加時間戳產生隨機 ID
       const randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26))
       const uniqId = randLetter + Date.now()
       return uniqId
     },
     setNewIndex() {
+      // 設定 New Board 後方數字
       let newIndex = 1
-      // 檢查畫面上有無 New Board
+      // 檢查畫面上是否已有 New Board
       const duplicateBoards = this.checkDuplicateName('New Board')
       if (duplicateBoards.length) {
         // 數字不連貫時以排在最大數字後方為主，故新數字需取最大數字加一
@@ -81,17 +76,21 @@ export default defineComponent({
       return newIndex
     },
     checkDuplicateName(targetName: string) {
+      // 檢查是否有重複名稱
       const statusNames = this.filterStatusList.map(statusItem => statusItem.name)
       return statusNames.filter(name => name.includes(targetName))
     },
     getMaxIndex(arr: string[], targetName: string) {
-      // 若有重複的名稱，單獨取出最後方的數字
+      // 取出目標名稱後方數字，找到其中的最大值
       const indexArr = arr.map(item => Number(item.split(targetName)[1]))
       return indexArr.sort((x, y) => y - x)[0]
     },
     toggleTodoModal(isShow: boolean, mode: string, data?: TodoItem) {
+      // 開關 todoModal
       isShow ? this.todoModal.show() : this.todoModal.hide()
+      // 設定 todoMode
       this.todoMode = mode
+      // 設定 todoModal 內的資料
       if (data) {
         this.todoModalData = {
           ...data,
@@ -101,6 +100,7 @@ export default defineComponent({
     }
   },
   mounted() {
+    // 註冊 todoModal
     const todoModalDom = document.getElementById('todoModal') as HTMLElement
     this.todoModal = new Modal(todoModalDom, {
       keyboard: false

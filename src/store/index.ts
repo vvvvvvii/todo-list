@@ -35,7 +35,7 @@ const store = new Vuex.Store({
       commit('setFilterStatusList', updatedList)
     },
     async getStatusList({ dispatch }) {
-      const data = await api.getStatus('statusList')
+      const data = await api.getStatus('/statusList')
       dispatch('setIsOvertime', data)
     },
     setStatusList({ commit }, data) {
