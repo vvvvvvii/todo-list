@@ -12,8 +12,8 @@
             "id": "E1704536558846",
             "name": "New Board 2"
           },
-          "deadline": 1704211200000,
-          "isOvertime": true,
+          "deadline": 1704124800000,
+          "isOvertime": false,
           "tags": [
             "aaa"
           ],
@@ -50,11 +50,6 @@
           "tempTag": ""
         }
       ]
-    },
-    {
-      "id": "Y1704961001268",
-      "name": "New Board 3",
-      "todoList": []
     },
     {
       "id": "T1704962004733",
