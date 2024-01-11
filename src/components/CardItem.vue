@@ -30,8 +30,7 @@
         </span>
       </p>
     </div>
-    <DeleteTodoModal :todo-id="todoItem.id" :status-id="todoItem.status.id" :board-list="boardList"
-      @toggle-delete-modal="toggleDeleteModal" @get-status-list="getStatusList" />
+    <DeleteTodoModal :todo-id="todoItem.id" :status-id="todoItem.status.id" @toggle-delete-modal="toggleDeleteModal" />
   </div>
 </template>
 
@@ -53,10 +52,6 @@ export default defineComponent({
     boardData: {
       required: true,
       type: Object as PropType<Status>
-    },
-    boardList: {
-      required: true,
-      type: [] as PropType<Status[]>
     }
   },
   components: { DeleteTodoModal },
@@ -82,9 +77,6 @@ export default defineComponent({
     },
     toggleDeleteModal(isShow: boolean) {
       isShow ? this.deleteModal.show() : this.deleteModal.hide()
-    },
-    getStatusList() {
-      this.$emit('get-status-list')
     },
     copyTodo() {
       const id = this.generateRandomId()

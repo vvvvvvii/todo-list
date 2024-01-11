@@ -26,6 +26,7 @@ export default defineComponent({
   },
   methods: {
     timestampTransfer(timestamp: number) {
+      // 時間戳轉成 月日,年（ex. Jan 3, 2025 ）格式
       const date = new Date(timestamp)
       return date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })
     }

@@ -75,6 +75,7 @@ import '../assets/ckeditor.css'
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import api from '../service/api'
+import store from '@/store/index'
 
 export default defineComponent({
   name: 'TodoModal',
@@ -82,17 +83,9 @@ export default defineComponent({
     mode: {
       type: String
     },
-    boardList: {
-      required: true,
-      type: [] as PropType<Status[]>
-    },
     defaultData: {
       required: true,
       type: Object as PropType<TodoItem>
-    },
-    todayTimestamp: {
-      required: true,
-      type: Number
     }
   },
   components: { DatePicker },
@@ -137,11 +130,14 @@ export default defineComponent({
     }
   },
   computed: {
+    filterStatusList() {
+      return store.state.filterStatusList
+    },
     modeName(): string {
       return this.mode === 'add' ? '新增待辦' : `編輯「${this.modal.title}」`
     },
     statusNames(): { id: string, name: string }[] {
-      return this.boardList.map(status => {
+      return this.filterStatusList.map(status => {
         const { id, name } = status
         return {
           id,
@@ -156,6 +152,9 @@ export default defineComponent({
     },
     submitBtnName(): string {
       return this.mode === 'add' ? '新增' : '完成'
+    },
+    todayTimestamp() {
+      return store.state.todayTimestamp
     }
   },
   watch: {
@@ -202,7 +201,7 @@ export default defineComponent({
       await this.findTargetStatus()
       await this.generateNewStatus()
       this.closeModal()
-      this.getStatusList()
+      store.dispatch('getStatusList')
     },
     async findTargetStatus() {
       // 如果 status 調整成其他項目 要改成新增到其他項目之下
@@ -246,16 +245,13 @@ export default defineComponent({
       }
     },
     deleteTodo(statusId: string) {
-      const targetStatus = this.boardList.filter(status => status.id === statusId)[0]
+      const targetStatus = this.filterStatusList.filter(status => status.id === statusId)[0]
       const updatedTodoList = targetStatus.todoList.filter(todoItem => todoItem.id !== this.modal.id)
 
       api.putStatus('statusList', {
         ...targetStatus,
         todoList: updatedTodoList
       })
-    },
-    getStatusList() {
-      this.$emit('get-status-list')
     },
     onModalContentClick(e: Event) {
       const clickPosition = e.target as HTMLElement

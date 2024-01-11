@@ -1,8 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <BoardName :board-data="boardData" :is-edit-mode="isEditMode" @toggle-edit-mode="toggleEditMode"
-        @get-status-list="getStatusList" />
+      <BoardName :board-data="boardData" :is-edit-mode="isEditMode" @toggle-edit-mode="toggleEditMode" />
       <div class="d-flex">
         <button class="btn" type="button" @click="toggleEditMode(true)">
           <i class="bi bi-pencil-square"></i>
@@ -14,8 +13,8 @@
     </div>
     <div class="card-body py-4 scroll-box">
       <draggable :group="boardData.name" @start="onDragging(true)" @end="onDragging(false)">
-        <CardItem v-for="todo in boardData.todoList" :key="todo.id" :todo-item="todo" :board-list="boardList"
-          :board-data="boardData" @toggle-todo-modal="toggleTodoModal" @get-status-list="getStatusList" />
+        <CardItem v-for="todo in boardData.todoList" :key="todo.id" :todo-item="todo" :board-data="boardData"
+          @toggle-todo-modal="toggleTodoModal" />
       </draggable>
       <p v-if="boardData.todoList.length === 0" class="text-center mb-4">無符合項目</p>
       <div class="text-center">
@@ -23,7 +22,7 @@
       </div>
     </div>
     <!-- delete status modal -->
-    <DeleteModal :status-id="boardData.id" @toggle-delete-modal="toggleDeleteModal" @get-status-list="getStatusList" />
+    <DeleteModal :status-id="boardData.id" @toggle-delete-modal="toggleDeleteModal" />
   </div>
 </template>
 
@@ -45,10 +44,6 @@ export default defineComponent({
     boardData: {
       required: true,
       type: Object as PropType<Status>
-    },
-    boardList: {
-      required: true,
-      type: [] as PropType<Status[]>
     }
   },
   data() {
@@ -61,9 +56,6 @@ export default defineComponent({
   methods: {
     toggleEditMode(isEditMode: boolean) {
       this.isEditMode = isEditMode
-    },
-    getStatusList() {
-      this.$emit('get-status-list')
     },
     toggleDeleteModal(isShow: boolean) {
       isShow ? this.deleteModal.show() : this.deleteModal.hide()

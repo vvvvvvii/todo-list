@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4 container">
+  <div class="mb-4">
     <div class="row justify-content-between">
       <div class="col-6">
         <!-- 搜尋欄＆搜尋按鈕 -->
@@ -37,15 +37,14 @@
 <script lang="ts" type="module">
 import ThemeBtn from './ThemeBtn.vue'
 import { TodoItem } from '@/types/TodoItem'
-import { defineComponent, PropType } from 'vue'
-import { Status } from '../types/Status'
+import { defineComponent } from 'vue'
+import store from '@/store/index'
 
 export default defineComponent({
   name: 'ToolBar',
-  props: {
-    statusList: {
-      required: true,
-      type: [] as PropType<Status[]>
+  computed: {
+    statusList() {
+      return store.state.statusList
     }
   },
   components: { ThemeBtn },
@@ -79,8 +78,7 @@ export default defineComponent({
           ...status, todoList: updatedTodoList
         }
       })
-
-      this.$emit('set-filter-status-list', updatedStatusList)
+      store.dispatch('setFilterStatusList', updatedStatusList)
     },
     organizedTodos(list: TodoItem[]) {
       // 以 searchTerm＆checkedOvertime＆checkedTags 篩選 Todo

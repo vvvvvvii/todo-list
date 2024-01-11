@@ -15,6 +15,7 @@
 import { Status } from '@/types/Status'
 import { defineComponent, PropType } from 'vue'
 import api from '../service/api'
+import store from '@/store/index'
 
 export default defineComponent({
   name: 'BoardItem',
@@ -32,7 +33,7 @@ export default defineComponent({
     async onEnterBoardName(e: KeyboardEvent) {
       const input = e.target as HTMLInputElement
       await this.updateBoard(input.value)
-      this.getStatusList()
+      store.dispatch('getStatusList')
       this.$emit('toggle-edit-mode', false)
     },
     async updateBoard(newName: string) {
@@ -41,9 +42,6 @@ export default defineComponent({
         name: newName
       }
       await api.putStatus('statusList', newStatus)
-    },
-    getStatusList() {
-      this.$emit('get-status-list')
     }
   }
 })

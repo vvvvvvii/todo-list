@@ -14,9 +14,9 @@
   </div>
 </template>
 <script lang="ts" type="module">
-import { Status } from '@/types/Status'
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
 import api from '../service/api'
+import store from '@/store/index'
 
 export default defineComponent({
   name: 'DeleteTodoModal',
@@ -28,10 +28,11 @@ export default defineComponent({
     statusId: {
       required: true,
       type: String
-    },
-    boardList: {
-      required: true,
-      type: [] as PropType<Status[]>
+    }
+  },
+  computed: {
+    filterStatusList() {
+      return store.state.filterStatusList
     }
   },
   methods: {
@@ -40,7 +41,7 @@ export default defineComponent({
     },
     deleteTodo(targetStatusId: string, targetTodoId: string) {
       this.closeModal()
-      const targetStatus = this.boardList.filter(status => status.id === targetStatusId)[0]
+      const targetStatus = this.filterStatusList.filter(status => status.id === targetStatusId)[0]
       const updatedTodoList = targetStatus.todoList.filter(todoItem => todoItem.id !== targetTodoId)
       api.putStatus('statusList', {
         ...targetStatus,
