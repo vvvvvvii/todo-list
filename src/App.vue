@@ -16,6 +16,10 @@ import BoardList from './components/BoardList.vue'
 import { TodoItem } from './types/TodoItem'
 import store from '@/store/index'
 
+/**
+ * 入口 / 包含 ToolBar, BoardList, OvertimeAlert
+ */
+
 export default Vue.extend({
   name: 'App',
   components: { ToolBar, BoardList, OvertimeAlert },
@@ -34,8 +38,11 @@ export default Vue.extend({
     }
   },
   methods: {
+    /**
+      * 抽出所有超時 todo 設定 OvertimeAlert
+      * @public
+    */
     setOvertimeTodos() {
-      // 抽出所有超時 todo 設定 OvertimeAlert
       const todoList = this.statusList.map(status => status.todoList).flat(1)
       this.overtimeTodos = todoList.filter(todo => todo.isOvertime)
     }

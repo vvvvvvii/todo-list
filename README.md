@@ -18,10 +18,22 @@ npm run serve
 npm run build
 ```
 
-### Lints and fixes files
+### 跑 db.json
 
 ```
-npm run lint
+npm run startServer
+```
+
+### 跑 styleGuide
+
+```
+npm run styleguide
+```
+
+### 生成 styleGuide 靜態頁
+
+```
+npm run styleguide:build
 ```
 
 ### Customize configuration

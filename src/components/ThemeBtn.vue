@@ -13,6 +13,10 @@
 
 import { defineComponent } from 'vue'
 
+/**
+ * 切換主題色按鈕
+ */
+
 export default defineComponent({
   name: 'ThemeBtn',
   data() {
@@ -21,8 +25,12 @@ export default defineComponent({
     }
   },
   methods: {
+    /**
+     * 調整 themeColor 以設定元件樣式
+     * @param {'light' | 'dark'} - 白天/夜晚模式
+     * @public
+     */
     toggleThemeColor(mode: 'light' | 'dark') {
-      // 調整 themeColor 以設定元件樣式
       this.themeColor = mode
       //  data-bs-theme 屬性需下在 body
       const body = document.querySelector('body')

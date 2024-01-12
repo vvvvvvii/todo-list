@@ -16,17 +16,30 @@
 <script lang="ts" type="module">
 import { defineComponent, PropType } from 'vue'
 import { TodoItem } from '@/types/TodoItem'
+
+/**
+ * 顯示超時待辦「標題」及「原訂完成日」列表
+ */
+
 export default defineComponent({
   name: 'OvertimeAlert',
   props: {
+    /**
+     * 所有超時待辦列表
+     */
     list: {
       required: true,
-      type: [] as PropType<TodoItem[]>
+      type: [] as PropType<TodoItem[]>,
+      default: []
     }
   },
   methods: {
+    /**
+     * 時間戳轉成 月 日,年（ex. Jan 3, 2025 ）格式
+     * @param {number} - 時間戳
+     * @public
+     */
     timestampTransfer(timestamp: number) {
-      // 時間戳轉成 月日,年（ex. Jan 3, 2025 ）格式
       const date = new Date(timestamp)
       return date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })
     }
