@@ -20,6 +20,8 @@ import { TodoItem } from '@/types/TodoItem'
 import { defineComponent } from 'vue'
 import api from '../service/api'
 import { Modal } from 'bootstrap'
+import { generateRandomId } from '../mixins/generateRandomId'
+import { setNewIndex } from '../mixins/generateUniqName'
 import store from '@/store/index'
 
 /**
@@ -52,60 +54,15 @@ export default defineComponent({
       store.dispatch('getStatusList')
     },
     /**
-     * 產生隨機 ID, Board Name 並設定空白 status
+     * 產生隨機 ID, Board Title 並設定空白 status
      * @public
      */
     setBlankStatus() {
-      const id = this.generateRandomId()
-      const name = `New Board ${this.setNewIndex()}`
       return {
-        id,
-        name,
+        id: generateRandomId(),
+        title: `New Board ${setNewIndex('New Board', this.filterStatusList)}`,
         todoList: []
       }
-    },
-    /**
-     * 以隨機字母加時間戳產生隨機 ID
-     * @public
-     */
-    generateRandomId() {
-      const randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26))
-      const uniqId = randLetter + Date.now()
-      return uniqId
-    },
-    /**
-     * 設定 New Board 後方數字
-     * @public
-     */
-    setNewIndex() {
-      let newIndex = 1
-      // 檢查畫面上是否已有 New Board
-      const duplicateBoards = this.checkDuplicateName('New Board')
-      if (duplicateBoards.length) {
-        // 數字不連貫時以排在最大數字後方為主，故新數字需取最大數字加一
-        const maxIndex = this.getMaxIndex(duplicateBoards, 'New Board')
-        newIndex = maxIndex + 1
-      }
-      return newIndex
-    },
-    /**
-     * 檢查是否有重複名稱
-     * @param {string} - 要比對之名稱
-     * @public
-     */
-    checkDuplicateName(targetName: string) {
-      const statusNames = this.filterStatusList.map(statusItem => statusItem.name)
-      return statusNames.filter(name => name.includes(targetName))
-    },
-    /**
-     * 取出所有目標名稱後方數字，找到其中的最大值
-     * @param {string[]} - 比對陣列
-     * @param {string} - 目標名稱
-     * @public
-     */
-    getMaxIndex(arr: string[], targetName: string) {
-      const indexArr = arr.map(item => Number(item.split(targetName)[1]))
-      return indexArr.sort((x, y) => y - x)[0]
     },
     /**
      * 開關 todoModal, 設定 todoMode 和 todoModal

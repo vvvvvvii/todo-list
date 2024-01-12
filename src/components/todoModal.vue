@@ -19,8 +19,8 @@
           <div class="mb-3">
             <label for="todoModalStatus" class="form-label">狀態</label>
             <select class="form-select form-select-sm" v-model="modal.status" aria-label="待辦事項狀態" id="todoModalStatus">
-              <option :value="status" v-for="status in statusNames" :key="status.name">
-                {{ status.name }}
+              <option :value="status" v-for="status in statusTitles" :key="status.title">
+                {{ status.title }}
               </option>
             </select>
           </div>
@@ -142,13 +142,13 @@ export default defineComponent({
       // modal header 標題
       return this.mode === 'add' ? '新增待辦' : `編輯「${this.modal.title}」`
     },
-    statusNames(): { id: string, name: string }[] {
+    statusTitles(): { id: string, title: string }[] {
       // 列出所有現有 status 給「狀態」下拉選單
       return this.filterStatusList.map(status => {
-        const { id, name } = status
+        const { id, title } = status
         return {
           id,
-          name
+          title
         }
       })
     },
@@ -249,7 +249,7 @@ export default defineComponent({
       this.$emit('toggle-todo-modal', false)
     },
     /**
-     * 以 'add' 或 modal.id 做 session 名稱暫存，並關閉 modal
+     * 以 'add' 或 modal.id(= todo.id) 做 session 名稱暫存，並關閉 modal
      * @public
      */
     saveTemp() {
@@ -304,7 +304,7 @@ export default defineComponent({
     editTodo() {
       const { todoList } = this.targetStatus
       const oldStatusId = this.defaultData.status.id
-      // this.defaultData.status 只有{id, name} ，須重新取完整 Status
+      // this.defaultData.status 只有{id, title} ，須重新取完整 Status
       const oldStatus = this.filterStatusList.filter(status => status.id === oldStatusId)[0]
 
       if (this.targetStatus.id === oldStatusId) {

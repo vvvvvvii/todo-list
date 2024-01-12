@@ -1,37 +1,40 @@
 <template>
-  <div class="card mb-4" :class="[todoItem.isOvertime ? 'overtime-card' : 'normal-card']">
-    <div class="card-header">
-      <h3 class="fs-5 text-truncate">{{ todoItem.title }}</h3>
-      <div class="dropdown">
-        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-three-dots-vertical"></i>
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#" @click="openEditModal">編輯</a></li>
-          <li><a class="dropdown-item" href="#" @click="toggleDeleteModal(true)">刪除</a></li>
-          <li><a class="dropdown-item" href="#" @click="copyTodo">複製</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="row card-info">
-        <div class="col-9">
-          <div class="text-truncate-2" v-html="todoItem.content" v-if="todoItem.content"></div>
-          <div v-else>無更多說明</div>
-        </div>
-        <div class="col-3 card-info-border" v-if="todoItem.tags.length > 0">
-          <p v-for="tag in todoItem.tags" :key="tag" class="fs-6"># {{ tag }}</p>
+  <draggable :group="boardData.title" @start="onDragging(true)" @end="onDragging(false)">
+    <div class="card mb-4" :class="[todoItem.isOvertime ? 'overtime-card' : 'normal-card']">
+      <div class="card-header">
+        <h3 class="fs-5 text-truncate">{{ todoItem.title }}</h3>
+        <div class="dropdown">
+          <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" @click="openEditModal">編輯</a></li>
+            <li><a class="dropdown-item" href="#" @click="toggleDeleteModal(true)">刪除</a></li>
+            <li><a class="dropdown-item" href="#" @click="copyTodo">複製</a></li>
+          </ul>
         </div>
       </div>
-      <p class="fs-6 text-info text-center">
-        <i class="bi bi-hourglass-split"></i>
-        <span class="ms-1">
-          {{ deadlineDateTransfer }}
-        </span>
-      </p>
+      <div class="card-body">
+        <div class="row card-info">
+          <div class="col-9">
+            <div class="text-truncate-2" v-html="todoItem.content" v-if="todoItem.content"></div>
+            <div v-else>無更多說明</div>
+          </div>
+          <div class="col-3 card-info-border" v-if="todoItem.tags.length > 0">
+            <p v-for="tag in todoItem.tags" :key="tag" class="fs-6"># {{ tag }}</p>
+          </div>
+        </div>
+        <p class="fs-6 text-info text-center">
+          <i class="bi bi-hourglass-split"></i>
+          <span class="ms-1">
+            {{ deadlineDateTransfer }}
+          </span>
+        </p>
+      </div>
+      <DeleteTodoModal :todo-id="todoItem.id" :status-id="todoItem.status.id"
+        @toggle-delete-status-modal="toggleDeleteModal" />
     </div>
-    <DeleteTodoModal :todo-id="todoItem.id" :status-id="todoItem.status.id" @toggle-delete-modal="toggleDeleteModal" />
-  </div>
+  </draggable>
 </template>
 
 <script lang="ts">
@@ -40,25 +43,39 @@ import { TodoItem } from '@/types/TodoItem'
 import { Status } from '@/types/Status'
 import { defineComponent, PropType } from 'vue'
 import { Modal } from 'bootstrap'
+import draggable from 'vuedraggable'
 import api from '../service/api'
+import { generateRandomId } from '../mixins/generateRandomId'
+import { setNewIndex } from '../mixins/generateUniqName'
+
+/**
+ * 待辦項目 / 包含 DeleteTodoModal
+ */
 
 export default defineComponent({
   name: 'CardItem',
   props: {
+    /**
+     * Todo 資料
+     */
     todoItem: {
       required: true,
       type: Object as PropType<TodoItem>
     },
+    /**
+     * status 資料
+     */
     boardData: {
       required: true,
       type: Object as PropType<Status>
     }
   },
-  components: { DeleteTodoModal },
+  components: { DeleteTodoModal, draggable },
   data() {
     return {
       showToolList: false,
-      deleteModal: {} as Modal
+      deleteStatusModal: {} as Modal,
+      dragging: false
     }
   },
   computed: {
@@ -68,23 +85,35 @@ export default defineComponent({
     }
   },
   methods: {
+    /**
+     * 開啟編輯 modal
+     * @public
+     */
     openEditModal() {
-      // 確認有無 temp data
-      const tempData = sessionStorage.getItem(this.todoItem.id)
-      // 有 tempData 則用，沒有則用 API 原先取到的資料
-      const modalData = tempData ? JSON.parse(tempData) : this.todoItem
-      this.$emit('toggle-todo-modal', true, 'edit', modalData)
+      /**
+       * 設定 modal 資料
+       * @param {string} - 當時儲存的 session 名稱
+       * @public
+       */
+      this.$emit('set-modal-data', this.todoItem.id)
     },
+    /**
+     * 開關刪除 modal
+     * @param {boolean} - 是否開啟
+     * @public
+     */
     toggleDeleteModal(isShow: boolean) {
-      isShow ? this.deleteModal.show() : this.deleteModal.hide()
+      isShow ? this.deleteStatusModal.show() : this.deleteStatusModal.hide()
     },
+    /**
+     * 複製 todo 並更新 statusList
+     * @public
+     */
     copyTodo() {
-      const id = this.generateRandomId()
-      const newTitle = `${this.todoItem.title} Copy${this.setNewIndex()}`
       const copyTodo = {
         ...this.todoItem,
-        id,
-        title: newTitle
+        id: generateRandomId(),
+        title: `${this.todoItem.title} Copy${setNewIndex('Copy', this.boardData.todoList)}`
       }
       const { todoList } = this.boardData
       todoList.push(copyTodo)
@@ -94,36 +123,19 @@ export default defineComponent({
       }
       api.putStatus('statusList', updatedStatus)
     },
-    generateRandomId() {
-      const randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26))
-      const uniqId = randLetter + Date.now()
-      return uniqId
-    },
-    setNewIndex() {
-      let newIndex = 1
-      const duplicateItems = this.checkDuplicateName('Copy')
-      if (duplicateItems.length) {
-        // 數字不連貫時以排在最大數字後方為主，故新數字需取最大數字加一
-        const maxIndex = this.getMaxIndex(duplicateItems, 'Copy')
-        newIndex = maxIndex + 1
-      }
-      return newIndex
-    },
-    checkDuplicateName(targetTitle: string) {
-      const titles = this.boardData.todoList.map(todoItem => todoItem.title)
-      return titles.filter(title => title.includes(targetTitle))
-    },
-    getMaxIndex(arr: string[], targetTitle: string) {
-      // 若有重複的名稱，單獨取出最後方的數字
-      const indexArr = arr.map(item => Number(item.split(targetTitle)[1]))
-      console.log(indexArr.sort((x, y) => y - x))
-      return indexArr.sort((x, y) => y - x)[0]
+    /**
+     * 是否在拖拉狀態
+     * @param {boolean} - 是否拖拉中
+     * @public
+     */
+    onDragging(startDragging: boolean) {
+      this.dragging = startDragging
     }
   },
   mounted() {
     const currentId = this.todoItem.id
-    const deleteModalDom = document.getElementById(`deleteTodoModal${currentId}`) as HTMLElement
-    this.deleteModal = new Modal(deleteModalDom, {
+    const deleteStatusModalDom = document.getElementById(`deleteTodoModal${currentId}`) as HTMLElement
+    this.deleteStatusModal = new Modal(deleteStatusModalDom, {
       keyboard: false
     })
   }

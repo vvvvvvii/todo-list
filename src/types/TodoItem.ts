@@ -4,7 +4,7 @@ export interface TodoItem {
   content: string
   status: {
     id: string
-    name: string
+    title: string
   }
   deadline: number
   isOvertime: boolean
