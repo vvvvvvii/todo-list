@@ -27,15 +27,18 @@
           <!-- tag 下拉選單＆輸入欄 -->
           <div class="mb-3">
             <label for="todoModalTag" class="form-label">Tag</label>
+            <!-- 已選 tag -->
             <span v-for="(tag, tagIndex) in modal.tags" :key="tag" class="badge bg-dark-primary text-primary ms-2">
               # {{ tag }}
               <a href="#" @click="removeTag(tagIndex)"><i class="bi bi-x-lg"></i></a>
             </span>
             <div class="position-relative">
+              <!-- select＆input -->
               <div class="form-select" id="tagSelect" @click="toggleTagOptions(!showTagOptions)">
-                <input type="text" class="form-select-hint" placeholder="下拉選擇或輸入客製化 Tag" v-model.trim="modal.tempTag"
+                <input type="text" class="select-input" placeholder="下拉選擇或輸入客製化 Tag" v-model.trim="modal.tempTag"
                   @keyup.enter="addTempTag">
               </div>
+              <!-- 下拉選單 -->
               <div class="list-group tag-list" v-show="showTagOptions">
                 <a href="#" class="list-group-item list-group-item-action" v-for="tag in  tagOptions " :key="tag"
                   @click="toggleSelectedTag(tag)">
@@ -237,7 +240,7 @@ export default defineComponent({
     editTodo() {
       const { todoList } = this.targetStatus
       const oldStatusId = this.defaultData.status.id
-      // this.defaultData.status 只有{id, name} 故須重新取
+      // this.defaultData.status 只有{id, name} ，須重新取完整 Status
       const oldStatus = this.filterStatusList.filter(status => status.id === oldStatusId)[0]
 
       if (this.targetStatus.id === oldStatusId) {
@@ -257,6 +260,7 @@ export default defineComponent({
       }
     },
     clearTempData(sessionName: string) {
+      // 移除 sessionStorage 資料並清空 tempTag
       sessionStorage.removeItem(sessionName)
       this.modal.tempTag = ''
     },
@@ -285,15 +289,7 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
-/* custom style for datepicker input */
-.datepicker-input input {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  border-radius: 0.25rem;
-  border: 0;
-}
-
-.form-select-hint {
+.select-input {
   border: 0;
   width: 100%;
   font-size: 0.875rem;
@@ -308,6 +304,14 @@ export default defineComponent({
   width: 100%;
   max-height: 100px;
   overflow: scroll;
+}
+
+/* custom style for datepicker input */
+.datepicker-input input {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  border: 0;
 }
 
 [data-bs-theme='light'] {
