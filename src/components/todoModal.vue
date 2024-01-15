@@ -3,7 +3,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="fs-5 fw-bold text-center">
+          <h3 class="fs-5 fw-bold text-center text-truncate">
             {{ modeName }}
           </h3>
         </div>
