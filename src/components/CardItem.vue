@@ -32,7 +32,7 @@
         </p>
       </div>
       <DeleteTodoModal :todo-id="todoItem.id" :status-id="todoItem.status.id"
-        @toggle-delete-status-modal="toggleDeleteModal" />
+        @toggle-delete-todo-modal="toggleDeleteModal" />
     </div>
   </draggable>
 </template>
@@ -74,7 +74,7 @@ export default defineComponent({
   data() {
     return {
       showToolList: false,
-      deleteStatusModal: {} as Modal,
+      deleteTodoModal: {} as Modal,
       dragging: false
     }
   },
@@ -103,7 +103,7 @@ export default defineComponent({
      * @public
      */
     toggleDeleteModal(isShow: boolean) {
-      isShow ? this.deleteStatusModal.show() : this.deleteStatusModal.hide()
+      isShow ? this.deleteTodoModal.show() : this.deleteTodoModal.hide()
     },
     /**
      * 複製 todo 並更新 statusList
@@ -134,8 +134,8 @@ export default defineComponent({
   },
   mounted() {
     const currentId = this.todoItem.id
-    const deleteStatusModalDom = document.getElementById(`deleteTodoModal${currentId}`) as HTMLElement
-    this.deleteStatusModal = new Modal(deleteStatusModalDom, {
+    const deleteTodoModalDom = document.getElementById(`deleteTodoModal${currentId}`) as HTMLElement
+    this.deleteTodoModal = new Modal(deleteTodoModalDom, {
       keyboard: false
     })
   }

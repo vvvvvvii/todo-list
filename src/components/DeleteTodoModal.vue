@@ -18,13 +18,23 @@ import { defineComponent } from 'vue'
 import api from '../service/api'
 import store from '@/store/index'
 
+/**
+ * 刪除待辦 Modal
+ */
+
 export default defineComponent({
   name: 'DeleteTodoModal',
   props: {
+    /**
+     * 欲刪除待辦之 id
+     */
     todoId: {
       required: true,
       type: String
     },
+    /**
+     * 欲刪除待辦位在狀態之 id
+     */
     statusId: {
       required: true,
       type: String
@@ -36,9 +46,22 @@ export default defineComponent({
     }
   },
   methods: {
+    /**
+    * 關閉刪除 modal
+    * @public
+    */
     closeModal() {
-      this.$emit('toggle-delete-modal', false)
+      /**
+       * 開關 delete todo modal
+       *
+       * @property {boolean} 是否開啟
+       */
+      this.$emit('toggle-delete-todo-modal', false)
     },
+    /**
+     * 關閉 modal 、找到目標 status 、取得新 todoList 、更新 api 並取得新列表
+     * @public
+     */
     deleteTodo(targetStatusId: string, targetTodoId: string) {
       this.closeModal()
       const targetStatus = this.filterStatusList.filter(status => status.id === targetStatusId)[0]
@@ -47,7 +70,7 @@ export default defineComponent({
         ...targetStatus,
         todoList: updatedTodoList
       })
-      this.$emit('get-status-list')
+      store.dispatch('getStatusList')
     }
   }
 

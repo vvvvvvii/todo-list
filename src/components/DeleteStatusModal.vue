@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" :id="`deleteModal${statusId}`" tabindex="-1">
+  <div class="modal fade" :id="`deleteStatusModal${statusId}`" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content py-3 text-center">
         <div class="modal-body">
@@ -16,23 +16,44 @@
 <script lang="ts" type="module">
 import { defineComponent } from 'vue'
 import api from '../service/api'
+import store from '@/store/index'
+
+/**
+ * 刪除狀態 Modal
+ */
 
 export default defineComponent({
-  name: 'DeleteModal',
+  name: 'DeleteStatusModal',
   props: {
+    /**
+     * 欲刪除狀態之 id
+     */
     statusId: {
       required: true,
       type: String
     }
   },
   methods: {
+    /**
+     * 關閉刪除 modal
+     * @public
+     */
     closeModal() {
-      this.$emit('toggle-delete-modal', false)
+      /**
+       * 開關 delete status modal
+       *
+       * @property {boolean} 是否開啟
+       */
+      this.$emit('toggle-delete-status-modal', false)
     },
+    /**
+     * 關閉 modal 、刪除指定 status 、取得新列表
+     * @public
+     */
     async deleteStatusBoard() {
       this.closeModal()
       await api.deleteStatus('statusList', this.statusId)
-      this.$emit('get-status-list')
+      store.dispatch('getStatusList')
     }
   }
 })
