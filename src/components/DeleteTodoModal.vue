@@ -7,7 +7,7 @@
         </div>
         <div class="modal-footer justify-content-center">
           <button type="button" class="btn btn-outline-light-info" @click="closeModal()">取消</button>
-          <button type="button" class="btn btn-primary border-info ms-2" @click="deleteTodo(statusId, todoId)">刪除</button>
+          <button type="button" class="btn btn-primary border-info ms-2" @click="deleteTodo()">刪除</button>
         </div>
       </div>
     </div>
@@ -15,6 +15,8 @@
 </template>
 <script lang="ts" type="module">
 import { defineComponent } from 'vue'
+import { Status } from '@/types/Status'
+import { findTargetStatus } from '../mixins/findTargetStatus'
 import api from '../service/api'
 import store from '@/store/index'
 
@@ -47,6 +49,15 @@ export default defineComponent({
   },
   methods: {
     /**
+     * 關閉 modal 、更新 api 並取得新列表
+     * @public
+     */
+    deleteTodo() {
+      this.closeModal()
+      this.updateStatus()
+      store.dispatch('getStatusList')
+    },
+    /**
     * 關閉刪除 modal
     * @public
     */
@@ -59,18 +70,23 @@ export default defineComponent({
       this.$emit('toggle-delete-todo-modal', false)
     },
     /**
-     * 關閉 modal 、找到目標 status 、取得新 todoList 、更新 api 並取得新列表
+     * 找到目標 status 、取得新 todoList 、更新 api
      * @public
      */
-    deleteTodo(targetStatusId: string, targetTodoId: string) {
-      this.closeModal()
-      const targetStatus = this.filterStatusList.filter(status => status.id === targetStatusId)[0]
-      const updatedTodoList = targetStatus.todoList.filter(todoItem => todoItem.id !== targetTodoId)
+    updateStatus() {
+      const targetStatus = findTargetStatus(this.filterStatusList, this.statusId)
+      const updatedTodoList = this.updateTodoList(targetStatus)
       api.putStatus('statusList', {
         ...targetStatus,
         todoList: updatedTodoList
       })
-      store.dispatch('getStatusList')
+    },
+    /**
+     * 取得新 todoList
+     * @public
+     */
+    updateTodoList(targetStatus: Status) {
+      return targetStatus.todoList.filter(todoItem => todoItem.id !== this.todoId)
     }
   }
 

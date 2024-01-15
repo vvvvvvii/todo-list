@@ -83,6 +83,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import '../assets/ckeditor.css'
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
+import { findTargetStatus } from '../mixins/findTargetStatus'
 import api from '../service/api'
 import store from '@/store/index'
 
@@ -173,20 +174,21 @@ export default defineComponent({
   },
   methods: {
     /**
-     * tag 下拉選單是否打勾 icon 樣式
-     * @param {string} - 點選之 tag
+     * 開關 tag 下拉選單
+     * @param {boolean} - 是否顯示
      * @public
      */
-    tagOptionIcon(tag: string) {
-      const { tags } = this.modal
-      return tags && tags.includes(tag) ? 'bi-check-square-fill' : 'bi-square'
+    toggleTagOptions(isShow: boolean) {
+      this.showTagOptions = isShow
     },
     /**
-     * 深拷貝傳入 modal 資料，使 modal 更動但未送出時不影響原始資料
+     * 點擊 modal 任一部分時，檢查點的是否是 tag 下拉選單，若不是則關閉 tag 下拉選單
+     * @param {Event} - 點擊資料
      * @public
      */
-    setModalData() {
-      this.modal = JSON.parse(JSON.stringify(this.defaultData))
+    onModalContentClick(e: Event) {
+      const clickPosition = e.target as HTMLElement
+      if (clickPosition.id !== 'tagSelect') this.toggleTagOptions(false)
     },
     /**
      * 取得所有預設 tag
@@ -194,6 +196,15 @@ export default defineComponent({
      */
     async getTagOptions() {
       this.tagOptions = await api.getStatus('/tagList')
+    },
+    /**
+     * tag 下拉選單是否打勾 icon 樣式
+     * @param {string} - 點選之 tag
+     * @public
+     */
+    tagOptionIcon(tag: string) {
+      const { tags } = this.modal
+      return tags && tags.includes(tag) ? 'bi-check-square-fill' : 'bi-square'
     },
     /**
      * 點選的 tag 若本來已點過則刪掉，沒點過則加入
@@ -237,6 +248,13 @@ export default defineComponent({
       this.modal.tags.splice(index, 1)
     },
     /**
+     * 深拷貝傳入 modal 資料，使 modal 更動但未送出時不影響原始資料
+     * @public
+     */
+    setModalData() {
+      this.modal = JSON.parse(JSON.stringify(this.defaultData))
+    },
+    /**
      * 關 todo modal
      * @public
      */
@@ -264,29 +282,24 @@ export default defineComponent({
      * @public
      */
     async onSubmit() {
-      await this.findTargetStatus()
       await this.generateNewStatus()
       this.closeModal()
       store.dispatch('getStatusList')
-    },
-    /**
-     * 以 modal 選擇的 statusId 找到要新增到哪個 status 下
-     * @public
-     */
-    findTargetStatus() {
-      const targetStatusId = this.modal.status.id
-      this.targetStatus = this.filterStatusList.filter(status => status.id === targetStatusId)[0]
     },
     /**
      * 新增或編輯 todoList ，並更新 statusList
      * @public
      */
     async generateNewStatus() {
+      const targetStatusId = this.modal.status.id
+      this.targetStatus = findTargetStatus(this.filterStatusList, targetStatusId)
+
       if (this.mode === 'add') {
         this.addTodo()
       } else {
         this.editTodo()
       }
+
       await api.putStatus('statusList', this.targetStatus)
     },
     /**
@@ -302,19 +315,12 @@ export default defineComponent({
      * @public
      */
     editTodo() {
-      const { todoList } = this.targetStatus
       const oldStatusId = this.defaultData.status.id
-      // this.defaultData.status 只有{id, title} ，須重新取完整 Status
-      const oldStatus = this.filterStatusList.filter(status => status.id === oldStatusId)[0]
+      const oldStatus = findTargetStatus(this.filterStatusList, oldStatusId)
 
       if (this.targetStatus.id === oldStatusId) {
         // status 沒變時，在 todolist 找到對應 todo id ，更換為現在的 modal 資料
-        this.targetStatus.todoList = todoList.map(todoItem => {
-          if (todoItem.id === this.modal.id) {
-            return this.modal
-          }
-          return todoItem
-        })
+        this.updateOldTodoList()
         this.clearTempData(this.modal.id)
       } else {
         // status 改變時，把原本 status 的 todo 刪掉，並在新 status 新增一項
@@ -323,13 +329,16 @@ export default defineComponent({
       }
     },
     /**
-     * 移除 sessionStorage 資料並清空 tempTag
-     * @param {string} - 當時儲存的 session 名稱
+     * status 沒變時，在 todolist 找到對應 todo id ，更換為現在的 modal 資料
      * @public
      */
-    clearTempData(sessionName: string) {
-      sessionStorage.removeItem(sessionName)
-      this.modal.tempTag = ''
+    updateOldTodoList() {
+      const { todoList } = this.targetStatus
+      todoList.forEach((todoItem, index) => {
+        if (todoItem.id === this.modal.id) {
+          todoList[index] = this.modal
+        }
+      })
     },
     /**
      * 找到對應 todo 刪除並更新 statusList
@@ -345,21 +354,13 @@ export default defineComponent({
       })
     },
     /**
-     * 點擊 modal 任一部分時，檢查點的是否是 tag 下拉選單，若不是則關閉 tag 下拉選單
-     * @param {Event} - 點擊資料
+     * 移除 sessionStorage 資料並清空 tempTag
+     * @param {string} - 當時儲存的 session 名稱
      * @public
      */
-    onModalContentClick(e: Event) {
-      const clickPosition = e.target as HTMLElement
-      if (clickPosition.id !== 'tagSelect') this.toggleTagOptions(false)
-    },
-    /**
-     * 開關 tag 下拉選單
-     * @param {boolean} - 是否顯示
-     * @public
-     */
-    toggleTagOptions(isShow: boolean) {
-      this.showTagOptions = isShow
+    clearTempData(sessionName: string) {
+      sessionStorage.removeItem(sessionName)
+      this.modal.tempTag = ''
     }
   },
   mounted() {

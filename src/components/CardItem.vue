@@ -110,17 +110,29 @@ export default defineComponent({
      * @public
      */
     copyTodo() {
+      const newIndex = setNewIndex('Copy', this.boardData.todoList)
+
       const copyTodo = {
         ...this.todoItem,
         id: generateRandomId(),
-        title: `${this.todoItem.title} Copy${setNewIndex('Copy', this.boardData.todoList)}`
+        title: `${this.todoItem.title} Copy${newIndex}`
       }
+
+      this.updateStatus(copyTodo)
+    },
+    /**
+     * 取得新 todoList 、更新 api
+     * @public
+     */
+    updateStatus(newTodo: TodoItem) {
       const { todoList } = this.boardData
-      todoList.push(copyTodo)
+      todoList.push(newTodo)
+
       const updatedStatus = {
         ...this.boardData,
         todoList
       }
+
       api.putStatus('statusList', updatedStatus)
     },
     /**

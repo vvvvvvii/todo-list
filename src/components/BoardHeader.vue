@@ -87,6 +87,11 @@ export default defineComponent({
      * @public
      */
     toggleDeleteModal(isShow: boolean) {
+      /**
+       * 開關刪除 modal
+       * @param {boolean} - 是否開啟
+       * @public
+       */
       this.$emit('toggle-delete-status-modal', isShow)
     }
   }
