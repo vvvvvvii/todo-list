@@ -18,11 +18,19 @@
           <!-- 狀態下拉選單 -->
           <div class="mb-3">
             <label for="todoModalStatus" class="form-label">狀態</label>
-            <select class="form-select form-select-sm" v-model="modal.status" aria-label="待辦事項狀態" id="todoModalStatus">
-              <option :value="status" v-for="status in statusTitles" :key="status.title">
-                {{ status.title }}
-              </option>
-            </select>
+            <div class="position-relative">
+              <div class="form-select" id="statusSelect" @click="toggleStatusOptions(!showStatusOptions)"
+                v-if="modal.status">
+                {{ modal.status.title }}
+              </div>
+              <!-- 下拉選單 -->
+              <div class="list-group tag-list" v-show="showStatusOptions">
+                <a href="#" class="list-group-item list-group-item-action" v-for="status in statusTitles"
+                  :key="status.title" @click="setSelectedStatus(status)">
+                  <span class="ms-2">{{ status.title }}</span>
+                </a>
+              </div>
+            </div>
           </div>
           <!-- tag 下拉選單＆輸入欄 -->
           <div class="mb-3">
@@ -131,6 +139,8 @@ export default defineComponent({
       },
       tagOptions: [] as string[],
       showTagOptions: false,
+      statusOptions: [] as string[],
+      showStatusOptions: false,
       targetStatus: {} as Status,
       modal: {} as TodoItem
     }
@@ -174,6 +184,22 @@ export default defineComponent({
   },
   methods: {
     /**
+     * 開關 status 下拉選單
+     * @param {boolean} - 是否顯示
+     * @public
+     */
+    toggleStatusOptions(isShow: boolean) {
+      this.showStatusOptions = isShow
+    },
+    /**
+     * 設定 status
+     * @param {string} - 點選之 status
+     * @public
+     */
+    setSelectedStatus(status: { id: string, title: string }) {
+      this.modal.status = status
+    },
+    /**
      * 開關 tag 下拉選單
      * @param {boolean} - 是否顯示
      * @public
@@ -189,6 +215,7 @@ export default defineComponent({
     onModalContentClick(e: Event) {
       const clickPosition = e.target as HTMLElement
       if (clickPosition.id !== 'tagSelect') this.toggleTagOptions(false)
+      if (clickPosition.id !== 'statusSelect') this.toggleStatusOptions(false)
     },
     /**
      * 取得所有預設 tag
