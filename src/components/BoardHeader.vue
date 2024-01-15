@@ -75,9 +75,14 @@ export default defineComponent({
     async updateBoard(newName: string) {
       if (!newName.trim()) return
 
+      const { todoList } = this.boardData
+      todoList.forEach((todoItem, index) => {
+        todoList[index].status.title = newName
+      })
       const newStatus = {
         ...this.boardData,
-        title: newName
+        title: newName,
+        todoList
       }
       await api.putStatus('statusList', newStatus)
     },
