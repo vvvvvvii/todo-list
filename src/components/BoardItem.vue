@@ -2,12 +2,14 @@
   <div class="card">
     <BoardHeader :board-data="boardData" @toggle-delete-status-modal="toggleDeleteStatusModal" />
     <div class="card-body py-4 scroll-box">
-      <CardItem v-for="todo in boardData.todoList" :key="todo.id" :todo-item="todo" :board-data="boardData"
-        @set-modal-data="setModalData" />
-      <p v-if="boardData.todoList.length === 0" class="text-center mb-4">無符合項目</p>
-      <div class="text-center">
-        <button type="button" class="btn btn-primary w-75" @click="openAddModal">新增待辦</button>
-      </div>
+      <draggable :list="boardData.todoList" :group="boardData.title" @start="onDragging(true)" @end="onDragging(false)">
+        <CardItem v-for="todo in boardData.todoList" :key="todo.id" :todo-item="todo" :board-data="boardData"
+          @set-modal-data="setModalData" />
+        <p v-if="boardData.todoList.length === 0" class="text-center mb-4">無符合項目</p>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary w-75" @click="openAddModal">新增待辦</button>
+        </div>
+      </draggable>
     </div>
     <!-- delete status modal -->
     <DeleteStatusModal :status-id="boardData.id" @toggle-delete-status-modal="toggleDeleteStatusModal" />
@@ -23,9 +25,11 @@ import { Status } from '@/types/Status'
 import { TodoItem } from '@/types/TodoItem'
 import { defineComponent, PropType } from 'vue'
 import { Modal } from 'bootstrap'
+import draggable from 'vuedraggable'
 
 import { generateRandomId } from '../mixins/generateRandomId'
 import store from '@/store/index'
+import api from '../service/api'
 
 /**
  * 狀態項目 / 包含 BoardHeader, CardItem, add todo 按鈕, DeleteStatusModal
@@ -33,7 +37,7 @@ import store from '@/store/index'
 
 export default defineComponent({
   name: 'BoardItem',
-  components: { BoardHeader, CardItem, DeleteStatusModal },
+  components: { BoardHeader, CardItem, DeleteStatusModal, draggable },
   props: {
     /**
      * status 資料
@@ -45,7 +49,8 @@ export default defineComponent({
   },
   data() {
     return {
-      deleteStatusModal: {} as Modal
+      deleteStatusModal: {} as Modal,
+      dragging: false
     }
   },
   methods: {
@@ -122,6 +127,21 @@ export default defineComponent({
        * @public
        */
       this.$emit('toggle-todo-modal', isShow, mode, data)
+    },
+    /**
+     * 是否在拖拉狀態
+     * @param {boolean} - 是否拖拉中
+     * @public
+     */
+    onDragging(startDragging: boolean) {
+      this.dragging = startDragging
+      if (!startDragging) {
+        this.updateSequence()
+      }
+    },
+    async updateSequence() {
+      const updatedStatus = this.boardData
+      await api.putStatus('statusList', updatedStatus)
     }
   },
   mounted() {

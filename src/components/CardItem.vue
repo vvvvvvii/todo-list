@@ -1,40 +1,38 @@
 <template>
-  <draggable :group="boardData.title" @start="onDragging(true)" @end="onDragging(false)">
-    <div class="card mb-4" :class="[todoItem.isOvertime ? 'overtime-card' : 'normal-card']">
-      <div class="card-header">
-        <h3 class="fs-5 text-truncate">{{ todoItem.title }}</h3>
-        <div class="dropdown">
-          <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-three-dots-vertical"></i>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" @click="openEditModal">編輯</a></li>
-            <li><a class="dropdown-item" href="#" @click="toggleDeleteModal(true)">刪除</a></li>
-            <li><a class="dropdown-item" href="#" @click="copyTodo">複製</a></li>
-          </ul>
-        </div>
+  <div class="card mb-4" :class="[todoItem.isOvertime ? 'overtime-card' : 'normal-card']">
+    <div class="card-header">
+      <h3 class="fs-5 text-truncate">{{ todoItem.title }}</h3>
+      <div class="dropdown">
+        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-three-dots-vertical"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" @click="openEditModal">編輯</a></li>
+          <li><a class="dropdown-item" href="#" @click="toggleDeleteModal(true)">刪除</a></li>
+          <li><a class="dropdown-item" href="#" @click="copyTodo">複製</a></li>
+        </ul>
       </div>
-      <div class="card-body">
-        <div class="row card-info">
-          <div class="col-9">
-            <div class="text-truncate-2" v-html="todoItem.content" v-if="todoItem.content"></div>
-            <div v-else>無更多說明</div>
-          </div>
-          <div class="col-3 card-info-border" v-if="todoItem.tags.length > 0">
-            <p v-for="tag in todoItem.tags" :key="tag" class="fs-6"># {{ tag }}</p>
-          </div>
-        </div>
-        <p class="fs-6 text-info text-center">
-          <i class="bi bi-hourglass-split"></i>
-          <span class="ms-1">
-            {{ deadlineDateTransfer }}
-          </span>
-        </p>
-      </div>
-      <DeleteTodoModal :todo-id="todoItem.id" :status-id="todoItem.status.id"
-        @toggle-delete-todo-modal="toggleDeleteModal" />
     </div>
-  </draggable>
+    <div class="card-body">
+      <div class="row card-info">
+        <div class="col-9">
+          <div class="text-truncate-2" v-html="todoItem.content" v-if="todoItem.content"></div>
+          <div v-else>無更多說明</div>
+        </div>
+        <div class="col-3 card-info-border" v-if="todoItem.tags.length > 0">
+          <p v-for="tag in todoItem.tags" :key="tag" class="fs-6"># {{ tag }}</p>
+        </div>
+      </div>
+      <p class="fs-6 text-info text-center">
+        <i class="bi bi-hourglass-split"></i>
+        <span class="ms-1">
+          {{ deadlineDateTransfer }}
+        </span>
+      </p>
+    </div>
+    <DeleteTodoModal :todo-id="todoItem.id" :status-id="todoItem.status.id"
+      @toggle-delete-todo-modal="toggleDeleteModal" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -43,7 +41,6 @@ import { TodoItem } from '@/types/TodoItem'
 import { Status } from '@/types/Status'
 import { defineComponent, PropType } from 'vue'
 import { Modal } from 'bootstrap'
-import draggable from 'vuedraggable'
 import api from '../service/api'
 import { generateRandomId } from '../mixins/generateRandomId'
 import { setNewIndex } from '../mixins/generateUniqName'
@@ -70,12 +67,11 @@ export default defineComponent({
       type: Object as PropType<Status>
     }
   },
-  components: { DeleteTodoModal, draggable },
+  components: { DeleteTodoModal },
   data() {
     return {
       showToolList: false,
-      deleteTodoModal: {} as Modal,
-      dragging: false
+      deleteTodoModal: {} as Modal
     }
   },
   computed: {
@@ -134,14 +130,6 @@ export default defineComponent({
       }
 
       api.putStatus('statusList', updatedStatus)
-    },
-    /**
-     * 是否在拖拉狀態
-     * @param {boolean} - 是否拖拉中
-     * @public
-     */
-    onDragging(startDragging: boolean) {
-      this.dragging = startDragging
     }
   },
   mounted() {
