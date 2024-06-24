@@ -150,10 +150,10 @@ export default defineComponent({
 
 [data-bs-theme='light'] {
   .overtime-card {
-    background: rgba(#f15555, 0.05);
+    background: rgba(#f4762d, 0.05);
 
     .card-header {
-      background: #f15555;
+      background: #f4762d;
       color: #fff
     }
 
@@ -193,17 +193,19 @@ export default defineComponent({
 
 [data-bs-theme='dark'] {
   .overtime-card {
-    background: rgba(#5e0909, 0.5);
+    background: #f6deac;
+    color: #2d3466;
 
     .card-header {
-      background: #5e0909;
+      background: #f4c62d;
     }
 
     .card-info {
-      border-bottom: 1px solid rgba(#f34545, 0.2);
+      border-bottom: 1px solid #a1a2a9;
+      color: #2d3466;
 
       &-border {
-        border-left: 1px solid rgba(#f34545, 0.2)
+        border-left: 1px solid #a1a2a9
       }
     }
   }

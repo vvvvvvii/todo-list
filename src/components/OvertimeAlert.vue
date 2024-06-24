@@ -1,10 +1,10 @@
 <template>
-  <div class="alert alert-danger alert-dismissible fade show overtime-alert" role="alert">
+  <div class="alert alert-warning alert-dismissible fade show overtime-alert" role="alert">
     <h6 class="text-center fs-5">下列代辦事項已超時：</h6>
     <hr>
     <ul>
-      <li v-for="alertItem in list" :key="alertItem.id" class="d-flex justify-content-center mb-2">
-        <div class="w-50">
+      <li v-for="alertItem in list" :key="alertItem.id" class="d-flex justify-content-center align-items-center mb-2">
+        <div class="w-25">
           {{ alertItem.title }}
         </div>
         <div class="fs-6">原訂完成日： {{ timestampTransfer(alertItem.deadline) }}</div>
